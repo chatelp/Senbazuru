@@ -16,7 +16,7 @@
     <application
         android:name="pm.chatel.senbazuru.MainApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/android_icon"
         android:label="@string/app_name"
         android:theme="@style/Theme.Light">
         <service android:name="pm.chatel.senbazuru.service.RefreshService"/>
