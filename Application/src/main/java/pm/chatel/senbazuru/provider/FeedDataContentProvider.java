@@ -138,7 +138,7 @@ public class FeedDataContentProvider extends ContentProvider {
 
         if (cursor.moveToFirst()) {
             cursor.close();
-            Toast.makeText(context, R.string.error_feed_url_exists, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, R.string.error_feed_url_exists, Toast.LENGTH_SHORT).show();
         } else {
             cursor.close();
             ContentValues values = new ContentValues();

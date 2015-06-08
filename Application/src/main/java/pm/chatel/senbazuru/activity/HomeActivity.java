@@ -52,6 +52,7 @@ import pm.chatel.senbazuru.fragment.EntriesListFragment;
 import pm.chatel.senbazuru.provider.FeedData;
 import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
 import pm.chatel.senbazuru.provider.FeedData.FeedColumns;
+import pm.chatel.senbazuru.provider.FeedDataContentProvider;
 import pm.chatel.senbazuru.service.FetcherService;
 import pm.chatel.senbazuru.service.RefreshService;
 import pm.chatel.senbazuru.utils.PrefUtils;
@@ -139,19 +140,6 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
             mDrawerLayout.setDrawerListener(mDrawerToggle);
         }
 
-        mDrawerHideReadButton = (FloatingActionButton) mLeftDrawer.findViewById(R.id.hide_read_button);
-        if (mDrawerHideReadButton != null) {
-            mDrawerHideReadButton.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    UiUtils.displayHideReadButtonAction(HomeActivity.this);
-                    return true;
-                }
-            });
-            UiUtils.updateHideReadButton(mDrawerHideReadButton);
-            UiUtils.addEmptyFooterView(mDrawerList, 90);
-        }
-
         if (savedInstanceState != null) {
             mCurrentDrawerPos = savedInstanceState.getInt(STATE_CURRENT_DRAWER_POS);
         }
@@ -164,7 +152,7 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
         } else {
             stopService(new Intent(this, RefreshService.class));
         }
-        if (PrefUtils.getBoolean(PrefUtils.REFRESH_ON_OPEN_ENABLED, false)) {
+        if (PrefUtils.getBoolean(PrefUtils.REFRESH_ON_OPEN_ENABLED, true)) {
             if (!PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
                 startService(new Intent(HomeActivity.this, FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS));
             }
@@ -345,6 +333,14 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
         // First open => we open the drawer for you
         if (PrefUtils.getBoolean(PrefUtils.FIRST_OPEN, true)) {
             PrefUtils.putBoolean(PrefUtils.FIRST_OPEN, false);
+
+            //Premier lancement: on ajoute le flux RSS à la main
+            FeedDataContentProvider.addFeed(HomeActivity.this, "senbazuru.fr/files/feed.xml", "Senbazuru", false);
+            //Premier lancement: et on lance le refresh a la main
+            if (!PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
+                startService(new Intent(HomeActivity.this, FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS));
+            }
+
             if (mDrawerLayout != null) {
                 mDrawerLayout.postDelayed(new Runnable() {
                     @Override
@@ -353,19 +349,6 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
                     }
                 }, 500);
             }
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.welcome_title)
-                    .setItems(new CharSequence[]{getString(R.string.google_news_title), getString(R.string.add_custom_feed)}, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (which == 1) {
-                                startActivity(new Intent(Intent.ACTION_INSERT).setData(FeedColumns.CONTENT_URI));
-                            } else {
-                                startActivity(new Intent(HomeActivity.this, AddGoogleNewsActivity.class));
-                            }
-                        }
-                    });
-            builder.show();
         }
 
         // Set title & icon

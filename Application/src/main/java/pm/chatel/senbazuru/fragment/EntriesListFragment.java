@@ -283,14 +283,6 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
         startRefresh();
     }
 
-    public void onClickHideRead(View view) {
-        if (!PrefUtils.getBoolean(PrefUtils.SHOW_READ, true)) {
-            PrefUtils.putBoolean(PrefUtils.SHOW_READ, true);
-        } else {
-            PrefUtils.putBoolean(PrefUtils.SHOW_READ, false);
-        }
-    }
-
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         if (id >= 0) { // should not happen, but I had a crash with this on PlayStore...

@@ -117,7 +117,42 @@ public class DrawerAdapter extends BaseAdapter {
                 holder.unreadTxt.setText(String.valueOf(unread));
             }
         }
-        if (mFeedsCursor != null && mFeedsCursor.moveToPosition(position - 2)) {
+
+        if (position == 0) {
+
+            //Attention: position du curseur (0 = premier feed) different de position dans la liste
+            if (mFeedsCursor != null && mFeedsCursor.moveToPosition(0)) {
+                if (mFeedsCursor.getInt(POS_IS_GROUP) != 1) {
+                    holder.stateTxt.setVisibility(View.VISIBLE);
+
+                    if (mFeedsCursor.isNull(POS_ERROR)) {
+                        long timestamp = mFeedsCursor.getLong(POS_LAST_UPDATE);
+
+                        // Date formatting is expensive, look at the cache
+                        String formattedDate = mFormattedDateCache.get(timestamp);
+                        if (formattedDate == null) {
+
+                            formattedDate = mContext.getString(R.string.update) + COLON;
+
+                            if (timestamp == 0) {
+                                formattedDate += mContext.getString(R.string.never);
+                            } else {
+                                formattedDate += StringUtils.getDateTimeString(timestamp);
+                            }
+
+                            mFormattedDateCache.put(timestamp, formattedDate);
+                        }
+
+                        holder.stateTxt.setText(formattedDate);
+                    } else {
+                        holder.stateTxt.setText(new StringBuilder(mContext.getString(R.string.error)).append(COLON).append(mFeedsCursor.getString(POS_ERROR)));
+                    }
+                }
+            }
+        }
+
+
+        /*if (mFeedsCursor != null && mFeedsCursor.moveToPosition(position - 2)) {
             holder.titleTxt.setText((mFeedsCursor.isNull(POS_NAME) ? mFeedsCursor.getString(POS_URL) : mFeedsCursor.getString(POS_NAME)));
 
             if (mFeedsCursor.getInt(POS_IS_GROUP) == 1) {
@@ -164,7 +199,7 @@ public class DrawerAdapter extends BaseAdapter {
                     holder.unreadTxt.setText(String.valueOf(unread));
                 }
             }
-        }
+        }*/
 
         return convertView;
     }
