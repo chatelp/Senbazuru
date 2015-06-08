@@ -1,134 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="pm.chatel.senbazuru"
-          android:installLocation="auto">
+    package="pm.chatel.senbazuru"
+    android:installLocation="auto" >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <permission
         android:name="pm.chatel.senbazuru.provider.WRITE_PERMISSION"
-        android:protectionLevel="signature"/>
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.example.gcm.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
 
     <application
-        android:name="pm.chatel.senbazuru.MainApplication"
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@drawable/android_icon"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Light">
-        <service android:name="pm.chatel.senbazuru.service.RefreshService"/>
-        <service android:name="pm.chatel.senbazuru.service.FetcherService"/>
+        android:theme="@style/Theme.Light" >
+
+        <service android:name=".service.RefreshService" />
+        <service android:name=".service.FetcherService" />
+
 
         <provider
-            android:name="pm.chatel.senbazuru.provider.FeedDataContentProvider"
+            android:name=".provider.FeedDataContentProvider"
             android:authorities="pm.chatel.senbazuru.provider.FeedData"
             android:exported="true"
-            android:writePermission="pm.chatel.senbazuru.provider.WRITE_PERMISSION"/>
+            android:writePermission="pm.chatel.senbazuru.provider.WRITE_PERMISSION" />
 
         <activity
-            android:name="pm.chatel.senbazuru.activity.HomeActivity"
+            android:name=".activity.HomeActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="pm.chatel.senbazuru.activity.AddGoogleNewsActivity"
+            android:name=".activity.AddGoogleNewsActivity"
             android:label="@string/google_news_title"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
         <activity
-            android:name="pm.chatel.senbazuru.activity.AboutActivity"
+            android:name=".activity.AboutActivity"
             android:label="@string/about_senbazuru"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
         <activity
-            android:name="pm.chatel.senbazuru.activity.EditFeedsListActivity"
+            android:name=".activity.EditFeedsListActivity"
             android:label="@string/feeds"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
         <activity
-            android:name="pm.chatel.senbazuru.activity.EntryActivity"
+            android:name=".activity.EntryActivity"
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask" >
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.item/vnd.flym.entry"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.item/vnd.flym.entry" />
             </intent-filter>
         </activity>
         <activity
-            android:name="pm.chatel.senbazuru.activity.GeneralPrefsActivity"
+            android:name=".activity.GeneralPrefsActivity"
             android:label="@string/menu_settings"
-            android:launchMode="singleTask"/>
-        <activity android:name="pm.chatel.senbazuru.widget.WidgetConfigActivity">
+            android:launchMode="singleTask" />
+        <activity android:name=".widget.WidgetConfigActivity" >
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
         <activity
-            android:name="pm.chatel.senbazuru.activity.EditFeedActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:name=".activity.EditFeedActivity"
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
-                <action android:name="android.intent.action.EDIT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.item/vnd.flym.feed"/>
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.item/vnd.flym.feed" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.INSERT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.dir/vnd.flym.feed"/>
+                <action android:name="android.intent.action.INSERT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.dir/vnd.flym.feed" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain"/>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
 
-        <receiver android:name="pm.chatel.senbazuru.widget.WidgetProvider">
+        <receiver android:name=".widget.WidgetProvider" >
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widgetinfo"/>
+                android:resource="@xml/widgetinfo" />
         </receiver>
-
-        <receiver android:name="pm.chatel.senbazuru.widget.TickerWidgetProvider">
+        <receiver android:name=".widget.TickerWidgetProvider" >
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/tickerwidgetinfo"/>
+                android:resource="@xml/tickerwidgetinfo" />
         </receiver>
 
         <service
-            android:name="pm.chatel.senbazuru.widget.WidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+            android:name=".widget.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name=".widget.TickerWidgetService" />
 
-        <service android:name="pm.chatel.senbazuru.widget.TickerWidgetService"/>
-
-        <receiver android:name="pm.chatel.senbazuru.receiver.BootCompletedBroadcastReceiver">
+        <receiver android:name=".receiver.BootCompletedBroadcastReceiver" >
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="pm.chatel.senbazuru.receiver.ConnectionChangeReceiver">
+        <receiver android:name=".receiver.ConnectionChangeReceiver" >
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        <receiver android:name="pm.chatel.senbazuru.service.RefreshService$RefreshAlarmReceiver"/>
+        <receiver android:name=".service.RefreshService$RefreshAlarmReceiver" />
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

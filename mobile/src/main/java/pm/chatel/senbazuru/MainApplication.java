@@ -21,6 +21,7 @@ package pm.chatel.senbazuru;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import pm.chatel.senbazuru.utils.PrefUtils;
 
@@ -38,5 +39,11 @@ public class MainApplication extends Application {
         mContext = getApplicationContext();
 
         PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, false); // init
+    }
+
+    @Override
+    public void attachBaseContext(Context base) {
+        MultiDex.install(base);
+        super.attachBaseContext(base);
     }
 }

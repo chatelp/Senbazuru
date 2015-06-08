@@ -207,7 +207,7 @@ public class FetcherService extends IntentService {
                 PrefUtils.putLong(PrefUtils.LAST_SCHEDULED_REFRESH, SystemClock.elapsedRealtime());
             }
 
-            long keepTime = Long.parseLong(PrefUtils.getString(PrefUtils.KEEP_TIME, "4")) * 86400000l;
+            long keepTime = Long.parseLong(PrefUtils.getString(PrefUtils.KEEP_TIME, "0")) * 86400000l;
             long keepDateBorderTime = keepTime > 0 ? System.currentTimeMillis() - keepTime : 0;
 
             deleteOldEntries(keepDateBorderTime);
