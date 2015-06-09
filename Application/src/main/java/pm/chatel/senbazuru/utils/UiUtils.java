@@ -19,7 +19,6 @@
 
 package pm.chatel.senbazuru.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.Cursor;
@@ -29,7 +28,6 @@ import android.support.v4.util.LongSparseArray;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 
@@ -39,12 +37,6 @@ import pm.chatel.senbazuru.R;
 public class UiUtils {
 
     static private final LongSparseArray<Bitmap> FAVICON_CACHE = new LongSparseArray<>();
-
-    static public void setPreferenceTheme(Activity a) {
-        if (!PrefUtils.getBoolean(PrefUtils.LIGHT_THEME, true)) {
-            a.setTheme(R.style.Theme_Dark);
-        }
-    }
 
     static public int dpToPixel(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, MainApplication.getContext().getResources().getDisplayMetrics());
@@ -82,9 +74,12 @@ public class UiUtils {
 
     static public void updateFindFABButton(FloatingActionButton findFABButton) {
         if (PrefUtils.getBoolean(PrefUtils.SHOW_SEARCH, true)) {
-            findFABButton.setColorNormalResId(getAttrResource(findFABButton.getContext(), R.attr.colorPrimaryDark, R.color.light_theme_color_primary_dark));
+            findFABButton.setColorNormal(findFABButton.getContext().getResources().getColor(R.color.primary_dark));
+
+            //findFABButton.setColorNormalResId(getAttrResource(findFABButton.getContext(), R.attr.colorPrimaryDark, R.color.light_theme_color_primary_dark));
         } else {
-            findFABButton.setColorNormalResId(getAttrResource(findFABButton.getContext(), R.attr.colorPrimary, R.color.light_theme_color_primary));
+            findFABButton.setColorNormal(findFABButton.getContext().getResources().getColor(R.color.accent));
+            //findFABButton.setColorNormalResId(getAttrResource(findFABButton.getContext(), R.attr.colorPrimary, R.color.light_theme_color_primary));
         }
     }
 

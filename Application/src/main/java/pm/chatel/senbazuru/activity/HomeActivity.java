@@ -88,7 +88,6 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        UiUtils.setPreferenceTheme(this);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);

@@ -8,6 +8,6 @@
                                        android:layout_margin="16dp"
                                        android:onClick="onClickToggleSearch"
                                        android:src="@drawable/action_search"
-                                       fab:fab_colorNormal="?attr/colorPrimary"
-                                       fab:fab_colorPressed="?attr/colorPrimaryDark"
-                                       fab:fab_colorRipple="?attr/colorPrimaryDark"/>
+                                       fab:fab_colorNormal="@color/accent"
+                                       fab:fab_colorPressed="@color/primary_dark"
+                                       fab:fab_colorRipple="@color/primary_dark"/>
