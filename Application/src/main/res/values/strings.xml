@@ -110,8 +110,6 @@
     <string name="all">Origamis</string>
     <string name="no_entries">No origamis</string>
     <string name="favorites">Starred</string>
-    <string name="context_menu_hide_read">Hide read origamis</string>
-    <string name="context_menu_show_read">Show read origamis</string>
     <string name="context_menu_share_starred">Share starred origamis</string>
     <string name="menu_star">Star</string>
     <string name="menu_unstar">Unstar</string>

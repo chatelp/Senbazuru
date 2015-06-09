@@ -80,23 +80,14 @@ public class UiUtils {
         return null;
     }
 
-    static public void updateHideReadButton(FloatingActionButton drawerHideReadButton) {
-        if (drawerHideReadButton != null) {
-            if (PrefUtils.getBoolean(PrefUtils.SHOW_READ, true)) {
-                drawerHideReadButton.setColorNormalResId(getAttrResource(drawerHideReadButton.getContext(), R.attr.colorPrimary, R.color.light_theme_color_primary));
-            } else {
-                drawerHideReadButton.setColorNormalResId(R.color.floating_action_button_disabled);
-            }
+    static public void updateFindFABButton(FloatingActionButton findFABButton) {
+        if (PrefUtils.getBoolean(PrefUtils.SHOW_SEARCH, true)) {
+            findFABButton.setColorNormalResId(getAttrResource(findFABButton.getContext(), R.attr.colorPrimaryDark, R.color.light_theme_color_primary_dark));
+        } else {
+            findFABButton.setColorNormalResId(getAttrResource(findFABButton.getContext(), R.attr.colorPrimary, R.color.light_theme_color_primary));
         }
     }
 
-    static public void displayHideReadButtonAction(Context context) {
-        if (PrefUtils.getBoolean(PrefUtils.SHOW_READ, true)) {
-            Toast.makeText(context, R.string.context_menu_hide_read, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, R.string.context_menu_show_read, Toast.LENGTH_SHORT).show();
-        }
-    }
 
     static public void addEmptyFooterView(ListView listView, int dp) {
         View view = new View(listView.getContext());

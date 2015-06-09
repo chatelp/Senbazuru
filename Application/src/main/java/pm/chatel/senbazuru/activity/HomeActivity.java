@@ -80,19 +80,6 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
     private ListView mDrawerList;
     private DrawerAdapter mDrawerAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
-    private FloatingActionButton mDrawerHideReadButton;
-    private final SharedPreferences.OnSharedPreferenceChangeListener mShowReadListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (PrefUtils.SHOW_READ.equals(key)) {
-                getLoaderManager().restartLoader(LOADER_ID, null, HomeActivity.this);
-
-                if (mDrawerHideReadButton != null) {
-                    UiUtils.updateHideReadButton(mDrawerHideReadButton);
-                }
-            }
-        }
-    };
     private CharSequence mTitle;
     private BitmapDrawable mIcon;
     private int mCurrentDrawerPos;
@@ -166,18 +153,6 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        PrefUtils.registerOnPrefChangeListener(mShowReadListener);
-    }
-
-    @Override
-    protected void onPause() {
-        PrefUtils.unregisterOnPrefChangeListener(mShowReadListener);
-        super.onPause();
-    }
-
-    @Override
     public void finish() {
         if (mCanQuit) {
             super.finish();
@@ -211,16 +186,26 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
         return super.onOptionsItemSelected(item);
     }
 
-    public void onClickHideRead(View view) {
-        if (!PrefUtils.getBoolean(PrefUtils.SHOW_READ, true)) {
-            PrefUtils.putBoolean(PrefUtils.SHOW_READ, true);
-        } else {
-            PrefUtils.putBoolean(PrefUtils.SHOW_READ, false);
-        }
-    }
-
     public void onClickEditFeeds(View view) {
         startActivity(new Intent(this, EditFeedsListActivity.class));
+    }
+
+    public void onClickToggleSearch(View view) {
+        if (PrefUtils.getBoolean(PrefUtils.SHOW_SEARCH, true)) {
+            //Recherche deja affichee -> on repasse a tous les origamis
+            selectDrawerItem(0);
+            if (mDrawerLayout != null) {
+                mDrawerLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDrawerLayout.closeDrawer(mLeftDrawer);
+                    }
+                }, 50);
+            }
+        }
+        else {
+            this.onClickSearch(view);
+        }
     }
 
     public void onClickSearch(View view) {
@@ -259,8 +244,7 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         CursorLoader cursorLoader = new CursorLoader(this, FeedColumns.GROUPED_FEEDS_CONTENT_URI, new String[]{FeedColumns._ID, FeedColumns.URL, FeedColumns.NAME,
-                FeedColumns.IS_GROUP, FeedColumns.ICON, FeedColumns.LAST_UPDATE, FeedColumns.ERROR, FEED_UNREAD_NUMBER},
-                PrefUtils.getBoolean(PrefUtils.SHOW_READ, true) ? "" : WHERE_UNREAD_ONLY, null, null
+                FeedColumns.IS_GROUP, FeedColumns.ICON, FeedColumns.LAST_UPDATE, FeedColumns.ERROR, FEED_UNREAD_NUMBER}, "" , null, null
         );
         cursorLoader.setUpdateThrottle(Constants.UPDATE_THROTTLE_DELAY);
         return cursorLoader;
@@ -299,12 +283,15 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
         switch (position) {
             case SEARCH_DRAWER_POSITION:
                 newUri = EntryColumns.SEARCH_URI(mEntriesFragment.getCurrentSearch());
+                PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, true);
                 break;
             case 0:
                 newUri = EntryColumns.ALL_ENTRIES_CONTENT_URI;
+                PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, false);
                 break;
             case 1:
                 newUri = EntryColumns.FAVORITES_CONTENT_URI;
+                PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, false);
                 break;
             default:
                 long feedOrGroupId = mDrawerAdapter.getItemId(position);
@@ -321,6 +308,7 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
                     showFeedInfo = false;
                 }
                 mTitle = mDrawerAdapter.getItemName(position);
+                PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, false);
                 break;
         }
 

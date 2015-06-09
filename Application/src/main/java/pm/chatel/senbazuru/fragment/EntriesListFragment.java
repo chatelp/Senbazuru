@@ -75,7 +75,7 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
     private EntriesCursorAdapter mEntriesCursorAdapter;
     private ListView mListView;
     private SearchView mSearchView;
-    private FloatingActionButton mHideReadButton;
+    private FloatingActionButton mFindFABButton;
     private long mListDisplayDate = new Date().getTime();
     private final LoaderManager.LoaderCallbacks<Cursor> mEntriesLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
         @Override
@@ -103,9 +103,8 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
     private final OnSharedPreferenceChangeListener mPrefListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (PrefUtils.SHOW_READ.equals(key)) {
-                getLoaderManager().restartLoader(ENTRIES_LOADER_ID, null, mEntriesLoader);
-                UiUtils.updateHideReadButton(mHideReadButton);
+            if (PrefUtils.SHOW_SEARCH.equals(key)) {
+                UiUtils.updateFindFABButton(mFindFABButton);
             } else if (PrefUtils.IS_REFRESHING.equals(key)) {
                 refreshSwipeProgress();
             }
@@ -209,15 +208,9 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
 
         UiUtils.addEmptyFooterView(mListView, 90);
 
-        mHideReadButton = (FloatingActionButton) rootView.findViewById(R.id.hide_read_button);
-        mHideReadButton.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                UiUtils.displayHideReadButtonAction(mListView.getContext());
-                return true;
-            }
-        });
-        UiUtils.updateHideReadButton(mHideReadButton);
+        mFindFABButton = (FloatingActionButton) rootView.findViewById(R.id.find_fab_button);
+        mFindFABButton.attachToListView(mListView);
+        UiUtils.updateFindFABButton(mFindFABButton);
 
         mRefreshListBtn = (Button) rootView.findViewById(R.id.refreshListBtn);
         mRefreshListBtn.setOnClickListener(new View.OnClickListener() {

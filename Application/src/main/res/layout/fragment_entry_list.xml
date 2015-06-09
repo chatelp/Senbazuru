@@ -42,6 +42,6 @@
             android:layout_gravity="fill"
             android:footerDividersEnabled="false"/>
 
-        <include layout="@layout/view_hide_read_button"/>
+        <include layout="@layout/find_fab_button"/>
     </FrameLayout>
 </LinearLayout>

@@ -83,8 +83,7 @@ public class FeedData {
     }
 
     public static boolean shouldShowReadEntries(Uri uri) {
-        boolean alwaysShowRead = EntryColumns.FAVORITES_CONTENT_URI.equals(uri) || (FeedDataContentProvider.URI_MATCHER.match(uri) == FeedDataContentProvider.URI_SEARCH);
-        return alwaysShowRead || PrefUtils.getBoolean(PrefUtils.SHOW_READ, true);
+        return true;
     }
 
     public static class FeedColumns implements BaseColumns {

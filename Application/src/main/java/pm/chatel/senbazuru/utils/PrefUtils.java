@@ -60,7 +60,8 @@ public class PrefUtils {
 
     public static final String LAST_SCHEDULED_REFRESH = "lastscheduledrefresh";
 
-    public static final String SHOW_READ = "show_read";
+    public static final String SHOW_SEARCH = "show_search";
+
 
     public static boolean getBoolean(String key, boolean defValue) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApplication.getContext());

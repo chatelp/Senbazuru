@@ -110,8 +110,6 @@
     <string name="all">Origamis</string>
     <string name="no_entries">Pas d\'origami</string>
     <string name="favorites">Favoris</string>
-    <string name="context_menu_hide_read">Cacher les origamis lus</string>
-    <string name="context_menu_show_read">Afficher les origamis lus</string>
     <string name="context_menu_share_starred">Partager les favoris</string>
     <string name="menu_star">Mettre en favoris</string>
     <string name="menu_unstar">Enlever des favoris</string>
