@@ -185,10 +185,6 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
         return super.onOptionsItemSelected(item);
     }
 
-    public void onClickEditFeeds(View view) {
-        startActivity(new Intent(this, EditFeedsListActivity.class));
-    }
-
     public void onClickToggleSearch(View view) {
         if (PrefUtils.getBoolean(PrefUtils.SHOW_SEARCH, true)) {
             //Recherche deja affichee -> on repasse a tous les origamis
@@ -317,7 +313,7 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
 
         mDrawerList.setItemChecked(position, true);
 
-        // First open => we open the drawer for you
+        // First launch
         if (PrefUtils.getBoolean(PrefUtils.FIRST_OPEN, true)) {
             PrefUtils.putBoolean(PrefUtils.FIRST_OPEN, false);
 
@@ -326,15 +322,6 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
             //Premier lancement: et on lance le refresh a la main
             if (!PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
                 startService(new Intent(HomeActivity.this, FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS));
-            }
-
-            if (mDrawerLayout != null) {
-                mDrawerLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mDrawerLayout.openDrawer(mLeftDrawer);
-                    }
-                }, 500);
             }
         }
 
