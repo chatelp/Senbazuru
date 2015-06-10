@@ -122,15 +122,7 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
 
         holder.starImgView.setVisibility(holder.isFavorite ? View.VISIBLE : View.INVISIBLE);
 
-        if (mShowFeedInfo && mFeedNamePos > -1) {
-            if (feedName != null) {
-                holder.dateTextView.setText(Html.fromHtml(new StringBuilder("<font color='#247ab0'>").append(feedName).append("</font>").append(Constants.COMMA_SPACE).append(StringUtils.getDateTimeString(cursor.getLong(mDatePos))).toString()));
-            } else {
-                holder.dateTextView.setText(StringUtils.getDateTimeString(cursor.getLong(mDatePos)));
-            }
-        } else {
-            holder.dateTextView.setText(StringUtils.getDateTimeString(cursor.getLong(mDatePos)));
-        }
+        holder.dateTextView.setText(StringUtils.getDateTimeString(cursor.getLong(mDatePos)));
 
         if (cursor.isNull(mIsReadPos)) {
             holder.titleTextView.setEnabled(true);

@@ -74,13 +74,13 @@ public class EntryView extends WebView {
 
     private static final String TEXT_HTML = "text/html";
     private static final String HTML_IMG_REGEX = "(?i)<[/]?[ ]?img(.|\n)*?>";
-    private static final String BACKGROUND_COLOR = PrefUtils.getBoolean(PrefUtils.LIGHT_THEME, true) ? "#f6f6f6" : "#181b1f";
-    private static final String QUOTE_BACKGROUND_COLOR = PrefUtils.getBoolean(PrefUtils.LIGHT_THEME, true) ? "#e6e6e6" : "#383b3f";
-    private static final String QUOTE_LEFT_COLOR = PrefUtils.getBoolean(PrefUtils.LIGHT_THEME, true) ? "#a6a6a6" : "#686b6f";
-    private static final String TEXT_COLOR = PrefUtils.getBoolean(PrefUtils.LIGHT_THEME, true) ? "#000000" : "#C0C0C0";
-    private static final String BUTTON_COLOR = PrefUtils.getBoolean(PrefUtils.LIGHT_THEME, true) ? "#52A7DF" : "#1A5A81";
-    private static final String SUBTITLE_COLOR = PrefUtils.getBoolean(PrefUtils.LIGHT_THEME, true) ? "#666666" : "#8c8c8c";
-    private static final String SUBTITLE_BORDER_COLOR = PrefUtils.getBoolean(PrefUtils.LIGHT_THEME, true) ? "solid #ddd" : "solid #303030";
+    private static final String BACKGROUND_COLOR = "#f6f6f6"; //this.getContext().getResources().getString(R.color.someColor);
+    private static final String QUOTE_BACKGROUND_COLOR = "#e6e6e6" ;
+    private static final String QUOTE_LEFT_COLOR = "#a6a6a6";
+    private static final String TEXT_COLOR = "#000000";
+    private static final String BUTTON_COLOR = "#52A7DF";
+    private static final String SUBTITLE_COLOR = "#666666";
+    private static final String SUBTITLE_BORDER_COLOR = "solid #ddd";
     private static final String CSS = "<head><style type='text/css'> "
             + "body {max-width: 100%; margin: 0.3cm; font-family: sans-serif-light; color: " + TEXT_COLOR + "; background-color:" + BACKGROUND_COLOR + "; line-height: 150%} "
             + "* {max-width: 100%; word-break: break-word}"
@@ -182,7 +182,9 @@ public class EntryView extends WebView {
             dateStringBuilder.append(" &mdash; ").append(author);
         }
 
-        content.append(dateStringBuilder).append(SUBTITLE_END).append(contentText).append(BUTTON_SECTION_START).append(BUTTON_START);
+        content.append(dateStringBuilder).append(SUBTITLE_END).append(contentText).append(BODY_END);
+
+        /*content.append(dateStringBuilder).append(SUBTITLE_END).append(contentText).append(BUTTON_SECTION_START).append(BUTTON_START);
 
         if (!preferFullText) {
             content.append(context.getString(R.string.get_full_text)).append(BUTTON_MIDDLE).append("injectedJSObject.onClickFullText();");
@@ -200,7 +202,7 @@ public class EntryView extends WebView {
             content.append(LINK_BUTTON_START).append(link).append(LINK_BUTTON_MIDDLE).append(context.getString(R.string.see_link)).append(LINK_BUTTON_END);
         }
 
-        content.append(BUTTON_SECTION_END).append(BODY_END);
+        content.append(BUTTON_SECTION_END).append(BODY_END);*/
 
         return content.toString();
     }
