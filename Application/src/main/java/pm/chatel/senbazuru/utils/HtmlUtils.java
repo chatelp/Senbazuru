@@ -100,6 +100,7 @@ public class HtmlUtils {
         return images;
     }
 
+    //TODO Supprimer
     public static String replaceImageURLs(String content, final long entryId) {
 
         if (!TextUtils.isEmpty(content)) {
@@ -116,18 +117,6 @@ public class HtmlUtils {
                 } else if (needDownloadPictures) {
                     imagesToDl.add(match);
                 }
-            }
-
-            // Download the images if needed
-            if (!imagesToDl.isEmpty()) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        FetcherService.addImagesToDownload(String.valueOf(entryId), imagesToDl);
-                        Context context = MainApplication.getContext();
-                        context.startService(new Intent(context, FetcherService.class).setAction(FetcherService.ACTION_DOWNLOAD_IMAGES));
-                    }
-                }).start();
             }
         }
 

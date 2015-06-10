@@ -102,8 +102,6 @@ import java.util.regex.Pattern;
 public class FetcherService extends IntentService {
 
     public static final String ACTION_REFRESH_FEEDS = "pm.chatel.senbazuru.REFRESH";
-    public static final String ACTION_MOBILIZE_FEEDS = "pm.chatel.senbazuru.MOBILIZE_FEEDS";
-    public static final String ACTION_DOWNLOAD_IMAGES = "pm.chatel.senbazuru.DOWNLOAD_IMAGES";
 
     private static final int THREAD_NUMBER = 3;
     private static final int MAX_TASK_ATTEMPT = 3;
@@ -195,228 +193,72 @@ public class FetcherService extends IntentService {
             return;
         }
 
-        if (ACTION_MOBILIZE_FEEDS.equals(intent.getAction())) {
-            mobilizeAllEntries();
-            downloadAllImages();
-        } else if (ACTION_DOWNLOAD_IMAGES.equals(intent.getAction())) {
-            downloadAllImages();
-        } else { // == Constants.ACTION_REFRESH_FEEDS
-            PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, true);
+        // == Constants.ACTION_REFRESH_FEEDS
+        PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, true);
 
-            if (isFromAutoRefresh) {
-                PrefUtils.putLong(PrefUtils.LAST_SCHEDULED_REFRESH, SystemClock.elapsedRealtime());
-            }
+        if (isFromAutoRefresh) {
+            PrefUtils.putLong(PrefUtils.LAST_SCHEDULED_REFRESH, SystemClock.elapsedRealtime());
+        }
 
-            long keepTime = Long.parseLong(PrefUtils.getString(PrefUtils.KEEP_TIME, "0")) * 86400000l;
-            long keepDateBorderTime = keepTime > 0 ? System.currentTimeMillis() - keepTime : 0;
+        long keepTime = Long.parseLong(PrefUtils.getString(PrefUtils.KEEP_TIME, "0")) * 86400000l;
+        long keepDateBorderTime = keepTime > 0 ? System.currentTimeMillis() - keepTime : 0;
 
-            deleteOldEntries(keepDateBorderTime);
+        deleteOldEntries(keepDateBorderTime);
 
-            String feedId = intent.getStringExtra(Constants.FEED_ID);
-            int newCount = (feedId == null ? refreshFeeds(keepDateBorderTime) : refreshFeed(feedId, keepDateBorderTime));
+        String feedId = intent.getStringExtra(Constants.FEED_ID);
+        int newCount = (feedId == null ? refreshFeeds(keepDateBorderTime) : refreshFeed(feedId, keepDateBorderTime));
 
-            if (newCount > 0) {
-                if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_ENABLED, true)) {
-                    Cursor cursor = getContentResolver().query(EntryColumns.CONTENT_URI, new String[]{Constants.DB_COUNT}, EntryColumns.WHERE_UNREAD, null, null);
+        if (newCount > 0) {
+            if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_ENABLED, true)) {
+                Cursor cursor = getContentResolver().query(EntryColumns.CONTENT_URI, new String[]{Constants.DB_COUNT}, EntryColumns.WHERE_UNREAD, null, null);
 
-                    cursor.moveToFirst();
-                    newCount = cursor.getInt(0); // The number has possibly changed
-                    cursor.close();
+                cursor.moveToFirst();
+                newCount = cursor.getInt(0); // The number has possibly changed
+                cursor.close();
 
-                    if (newCount > 0) {
-                        String text = getResources().getQuantityString(R.plurals.number_of_new_entries, newCount, newCount);
+                if (newCount > 0) {
+                    String text = getResources().getQuantityString(R.plurals.number_of_new_entries, newCount, newCount);
 
-                        Intent notificationIntent = new Intent(FetcherService.this, HomeActivity.class);
-                        PendingIntent contentIntent = PendingIntent.getActivity(FetcherService.this, 0, notificationIntent,
-                                PendingIntent.FLAG_UPDATE_CURRENT);
+                    Intent notificationIntent = new Intent(FetcherService.this, HomeActivity.class);
+                    PendingIntent contentIntent = PendingIntent.getActivity(FetcherService.this, 0, notificationIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
 
-                        Notification.Builder notifBuilder = new Notification.Builder(MainApplication.getContext()) //
-                                .setContentIntent(contentIntent) //
-                                .setSmallIcon(R.drawable.ic_statusbar_rss) //
-                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.android_icon)) //
-                                .setTicker(text) //
-                                .setWhen(System.currentTimeMillis()) //
-                                .setAutoCancel(true) //
-                                .setContentTitle(getString(R.string.flym_feeds)) //
-                                .setContentText(text) //
-                                .setLights(0xffffffff, 0, 0);
+                    Notification.Builder notifBuilder = new Notification.Builder(MainApplication.getContext()) //
+                            .setContentIntent(contentIntent) //
+                            .setSmallIcon(R.drawable.ic_statusbar_rss) //
+                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.android_icon)) //
+                            .setTicker(text) //
+                            .setWhen(System.currentTimeMillis()) //
+                            .setAutoCancel(true) //
+                            .setContentTitle(getString(R.string.flym_feeds)) //
+                            .setContentText(text) //
+                            .setLights(0xffffffff, 0, 0);
 
-                        if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_VIBRATE, false)) {
-                            notifBuilder.setVibrate(new long[]{0, 1000});
-                        }
-
-                        String ringtone = PrefUtils.getString(PrefUtils.NOTIFICATIONS_RINGTONE, null);
-                        if (ringtone != null && ringtone.length() > 0) {
-                            notifBuilder.setSound(Uri.parse(ringtone));
-                        }
-
-                        if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_LIGHT, false)) {
-                            notifBuilder.setLights(0xffffffff, 300, 1000);
-                        }
-
-                        if (Constants.NOTIF_MGR != null) {
-                            Constants.NOTIF_MGR.notify(0, notifBuilder.getNotification());
-                        }
+                    if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_VIBRATE, false)) {
+                        notifBuilder.setVibrate(new long[]{0, 1000});
                     }
-                } else if (Constants.NOTIF_MGR != null) {
-                    Constants.NOTIF_MGR.cancel(0);
-                }
-            }
 
-            mobilizeAllEntries();
-            downloadAllImages();
-
-            PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, false);
-        }
-    }
-
-    private void mobilizeAllEntries() {
-        ContentResolver cr = getContentResolver();
-        Cursor cursor = cr.query(TaskColumns.CONTENT_URI, new String[]{TaskColumns._ID, TaskColumns.ENTRY_ID, TaskColumns.NUMBER_ATTEMPT},
-                TaskColumns.IMG_URL_TO_DL + Constants.DB_IS_NULL, null, null);
-
-        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
-
-        while (cursor.moveToNext()) {
-            long taskId = cursor.getLong(0);
-            long entryId = cursor.getLong(1);
-            int nbAttempt = 0;
-            if (!cursor.isNull(2)) {
-                nbAttempt = cursor.getInt(2);
-            }
-
-            boolean success = false;
-
-            Uri entryUri = EntryColumns.CONTENT_URI(entryId);
-            Cursor entryCursor = cr.query(entryUri, null, null, null, null);
-
-            if (entryCursor.moveToFirst()) {
-                if (entryCursor.isNull(entryCursor.getColumnIndex(EntryColumns.MOBILIZED_HTML))) { // If we didn't already mobilized it
-                    int linkPos = entryCursor.getColumnIndex(EntryColumns.LINK);
-                    int abstractHtmlPos = entryCursor.getColumnIndex(EntryColumns.ABSTRACT);
-                    HttpURLConnection connection = null;
-
-                    try {
-                        String link = entryCursor.getString(linkPos);
-
-                        // Try to find a text indicator for better content extraction
-                        String contentIndicator = null;
-                        String text = entryCursor.getString(abstractHtmlPos);
-                        if (!TextUtils.isEmpty(text)) {
-                            text = Html.fromHtml(text).toString();
-                            if (text.length() > 60) {
-                                contentIndicator = text.substring(20, 40);
-                            }
-                        }
-
-                        connection = NetworkUtils.setupConnection(link);
-
-                        String mobilizedHtml = ArticleTextExtractor.extractContent(connection.getInputStream(), contentIndicator);
-
-                        if (mobilizedHtml != null) {
-                            mobilizedHtml = HtmlUtils.improveHtmlContent(mobilizedHtml, NetworkUtils.getBaseUrl(link));
-                            ContentValues values = new ContentValues();
-                            values.put(EntryColumns.MOBILIZED_HTML, mobilizedHtml);
-
-                            ArrayList<String> imgUrlsToDownload = null;
-                            if (NetworkUtils.needDownloadPictures()) {
-                                imgUrlsToDownload = HtmlUtils.getImageURLs(mobilizedHtml);
-                            }
-
-                            String mainImgUrl;
-                            if (imgUrlsToDownload != null) {
-                                mainImgUrl = HtmlUtils.getMainImageURL(imgUrlsToDownload);
-                            } else {
-                                mainImgUrl = HtmlUtils.getMainImageURL(mobilizedHtml);
-                            }
-
-                            if (mainImgUrl != null) {
-                                values.put(EntryColumns.IMAGE_URL, mainImgUrl);
-                            }
-
-                            if (cr.update(entryUri, values, null, null) > 0) {
-                                success = true;
-                                operations.add(ContentProviderOperation.newDelete(TaskColumns.CONTENT_URI(taskId)).build());
-                                if (imgUrlsToDownload != null && !imgUrlsToDownload.isEmpty()) {
-                                    addImagesToDownload(String.valueOf(entryId), imgUrlsToDownload);
-                                }
-                            }
-                        }
-                    } catch (Throwable ignored) {
-                    } finally {
-                        if (connection != null) {
-                            connection.disconnect();
-                        }
+                    String ringtone = PrefUtils.getString(PrefUtils.NOTIFICATIONS_RINGTONE, null);
+                    if (ringtone != null && ringtone.length() > 0) {
+                        notifBuilder.setSound(Uri.parse(ringtone));
                     }
-                } else { // We already mobilized it
-                    success = true;
-                    operations.add(ContentProviderOperation.newDelete(TaskColumns.CONTENT_URI(taskId)).build());
-                }
-            }
-            entryCursor.close();
 
-            if (!success) {
-                if (nbAttempt + 1 > MAX_TASK_ATTEMPT) {
-                    operations.add(ContentProviderOperation.newDelete(TaskColumns.CONTENT_URI(taskId)).build());
-                } else {
-                    ContentValues values = new ContentValues();
-                    values.put(TaskColumns.NUMBER_ATTEMPT, nbAttempt + 1);
-                    operations.add(ContentProviderOperation.newUpdate(TaskColumns.CONTENT_URI(taskId)).withValues(values).build());
+                    if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_LIGHT, false)) {
+                        notifBuilder.setLights(0xffffffff, 300, 1000);
+                    }
+
+                    if (Constants.NOTIF_MGR != null) {
+                        Constants.NOTIF_MGR.notify(0, notifBuilder.getNotification());
+                    }
                 }
+            } else if (Constants.NOTIF_MGR != null) {
+                Constants.NOTIF_MGR.cancel(0);
             }
         }
 
-        cursor.close();
-
-        if (!operations.isEmpty()) {
-            try {
-                cr.applyBatch(FeedData.AUTHORITY, operations);
-            } catch (Throwable ignored) {
-            }
-        }
+        PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, false);
     }
 
-    private void downloadAllImages() {
-        ContentResolver cr = MainApplication.getContext().getContentResolver();
-        Cursor cursor = cr.query(TaskColumns.CONTENT_URI, new String[]{TaskColumns._ID, TaskColumns.ENTRY_ID, TaskColumns.IMG_URL_TO_DL,
-                TaskColumns.NUMBER_ATTEMPT}, TaskColumns.IMG_URL_TO_DL + Constants.DB_IS_NOT_NULL, null, null);
-
-        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
-
-        while (cursor.moveToNext()) {
-            long taskId = cursor.getLong(0);
-            long entryId = cursor.getLong(1);
-            String imgPath = cursor.getString(2);
-            int nbAttempt = 0;
-            if (!cursor.isNull(3)) {
-                nbAttempt = cursor.getInt(3);
-            }
-
-            try {
-                NetworkUtils.downloadImage(entryId, imgPath);
-
-                // If we are here, everything is OK
-                operations.add(ContentProviderOperation.newDelete(TaskColumns.CONTENT_URI(taskId)).build());
-            } catch (Exception e) {
-                if (nbAttempt + 1 > MAX_TASK_ATTEMPT) {
-                    operations.add(ContentProviderOperation.newDelete(TaskColumns.CONTENT_URI(taskId)).build());
-                } else {
-                    ContentValues values = new ContentValues();
-                    values.put(TaskColumns.NUMBER_ATTEMPT, nbAttempt + 1);
-                    operations.add(ContentProviderOperation.newUpdate(TaskColumns.CONTENT_URI(taskId)).withValues(values).build());
-                }
-            }
-        }
-
-        cursor.close();
-
-        if (!operations.isEmpty()) {
-            try {
-                cr.applyBatch(FeedData.AUTHORITY, operations);
-            } catch (Throwable ignored) {
-            }
-        }
-    }
 
     private void deleteOldEntries(long keepDateBorderTime) {
         if (keepDateBorderTime > 0) {

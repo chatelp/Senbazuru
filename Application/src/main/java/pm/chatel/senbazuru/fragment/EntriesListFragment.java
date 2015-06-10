@@ -106,7 +106,7 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
             if (PrefUtils.SHOW_SEARCH.equals(key)) {
                 UiUtils.updateFindFABButton(mFindFABButton);
             } else if (PrefUtils.IS_REFRESHING.equals(key)) {
-                refreshSwipeProgress();
+                handleProgress();
             }
         }
     };
@@ -159,7 +159,7 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        refreshSwipeProgress();
+        handleProgress();
         PrefUtils.registerOnPrefChangeListener(mPrefListener);
 
         if (mUri != null) {
@@ -216,6 +216,9 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
         mRefreshListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                mRefreshListBtn.setVisibility(View.GONE);
+
                 mNewEntriesNumber = 0;
                 mListDisplayDate = new Date().getTime();
 
@@ -350,7 +353,7 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
             }
         }
 
-        refreshSwipeProgress();
+        handleProgress();
     }
 
     public Uri getUri() {
@@ -391,16 +394,22 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
         if (mNewEntriesNumber > 0) {
             mRefreshListBtn.setText(getResources().getQuantityString(R.plurals.number_of_new_entries, mNewEntriesNumber, mNewEntriesNumber));
             mRefreshListBtn.setVisibility(View.VISIBLE);
-        } else {
-            mRefreshListBtn.setVisibility(View.GONE);
         }
     }
 
-    private void refreshSwipeProgress() {
+    private void handleProgress() {
         if (PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
             showSwipeProgress();
         } else {
             hideSwipeProgress();
+
+            mNewEntriesNumber = 0;
+            mListDisplayDate = new Date().getTime();
+
+            refreshUI();
+            if (mUri != null) {
+                restartLoaders();
+            }
         }
     }
 
