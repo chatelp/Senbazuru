@@ -57,6 +57,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:+'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:+'
     compile 'com.google.android.gms:play-services:7.5.0'
+    compile 'com.google.android.gms:play-services-ads:7.5.0'
     compile 'com.android.support:multidex:1.0.1'
     compile project(path: ':cloudBackend', configuration: 'android-endpoints')
 }

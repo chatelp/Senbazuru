@@ -20,15 +20,20 @@
 package pm.chatel.senbazuru.activity;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import pm.chatel.senbazuru.Constants;
 import pm.chatel.senbazuru.R;
 import pm.chatel.senbazuru.fragment.EntryFragment;
 import pm.chatel.senbazuru.utils.PrefUtils;
 import pm.chatel.senbazuru.utils.UiUtils;
+
 
 public class EntryActivity extends BaseActivity {
 
@@ -48,6 +53,14 @@ public class EntryActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest request = new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // Simulator.
+                    .addTestDevice("BE07C00BC1E98AD5F33E968B783B6A6A") // Nexus 5
+                    .addTestDevice("BCFD0EFF1162167A639FBD3BB621DB8A") // Nexus 7
+                    .build();
+        mAdView.loadAd(request);
 
         if (PrefUtils.getBoolean(PrefUtils.DISPLAY_ENTRIES_FULLSCREEN, false)) {
             setImmersiveFullScreen(true);

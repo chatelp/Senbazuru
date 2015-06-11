@@ -22,6 +22,9 @@
 -->
 <resources>
 
+    <!-- ADS -->
+    <string name="banner_ad_unit_id">ca-app-pub-9376596280963493/3193556836</string>
+
     <!-- GENERAL -->
     <string name="app_name">Senbazuru</string>
     <string name="about_senbazuru">About Senbazuru</string>
