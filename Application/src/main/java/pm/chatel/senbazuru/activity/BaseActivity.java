@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import pm.chatel.senbazuru.Constants;
+import pm.chatel.senbazuru.gcm.GcmRegistrationAsyncTask;
 
 public abstract class BaseActivity extends ActionBarActivity {
 
@@ -71,6 +72,10 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (android.os.Build.VERSION.SDK_INT >= 21) { // Lollipop
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS); // Tweak to allow setting status bar color
         }
+
+        //GCM Setup //TODO
+        //new GcmRegistrationAsyncTask(this).execute();
+
     }
 
     @Override

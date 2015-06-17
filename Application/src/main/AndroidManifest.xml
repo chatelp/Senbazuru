@@ -119,6 +119,17 @@
         </receiver>
         <receiver android:name=".service.RefreshService$RefreshAlarmReceiver" />
 
+        <!-- GCM -->
+        <receiver
+            android:name=".gcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="pm.chatel.senbazuru" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".gcm.GcmIntentService" />
+
     </application>
 
 </manifest>

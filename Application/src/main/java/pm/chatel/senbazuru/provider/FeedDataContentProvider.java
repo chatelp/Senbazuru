@@ -353,7 +353,6 @@ public class FeedDataContentProvider extends ContentProvider {
                 cursor.close();
 
                 newId = database.insert(FeedColumns.TABLE_NAME, null, values);
-                mDatabaseHelper.exportToOPML();
 
                 break;
             }
@@ -538,7 +537,6 @@ public class FeedDataContentProvider extends ContentProvider {
 
         if (FeedColumns.TABLE_NAME.equals(table)
                 && (values.containsKey(FeedColumns.NAME) || values.containsKey(FeedColumns.URL) || values.containsKey(FeedColumns.PRIORITY))) {
-            mDatabaseHelper.exportToOPML();
         }
         if (count > 0) {
             notifyChangeOnAllUris(matchCode, uri);
@@ -724,10 +722,6 @@ public class FeedDataContentProvider extends ContentProvider {
         int count = database.delete(table, where.toString(), selectionArgs);
 
         if (count > 0) {
-            if (FeedColumns.TABLE_NAME.equals(table)) {
-                mDatabaseHelper.exportToOPML();
-            }
-
             notifyChangeOnAllUris(matchCode, uri);
         }
         return count;
