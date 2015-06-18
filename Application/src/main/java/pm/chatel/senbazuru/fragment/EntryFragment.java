@@ -57,6 +57,7 @@ import pm.chatel.senbazuru.Constants;
 import pm.chatel.senbazuru.MainApplication;
 import pm.chatel.senbazuru.R;
 import pm.chatel.senbazuru.activity.BaseActivity;
+import pm.chatel.senbazuru.activity.EntryActivity;
 import pm.chatel.senbazuru.provider.FeedData;
 import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
 import pm.chatel.senbazuru.provider.FeedData.FeedColumns;
@@ -466,14 +467,16 @@ public class EntryFragment extends SwipeRefreshFragment implements BaseActivity.
 
     @Override
     public void onStartVideoFullScreen() {
-        BaseActivity activity = (BaseActivity) getActivity();
+        EntryActivity activity = (EntryActivity) getActivity();
+        activity.showAdView(false);
         activity.setNormalFullScreen(true);
     }
 
     @Override
     public void onEndVideoFullScreen() {
-        BaseActivity activity = (BaseActivity) getActivity();
+        EntryActivity activity = (EntryActivity) getActivity();
         activity.setNormalFullScreen(false);
+        activity.showAdView(true);
     }
 
     @Override

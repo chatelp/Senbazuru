@@ -38,6 +38,7 @@ import pm.chatel.senbazuru.utils.UiUtils;
 public class EntryActivity extends BaseActivity {
 
     private EntryFragment mEntryFragment;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class EntryActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adView);
         AdRequest request = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // Simulator.
                     .addTestDevice("BE07C00BC1E98AD5F33E968B783B6A6A") // Nexus 5
@@ -64,6 +65,12 @@ public class EntryActivity extends BaseActivity {
 
         if (PrefUtils.getBoolean(PrefUtils.DISPLAY_ENTRIES_FULLSCREEN, false)) {
             setImmersiveFullScreen(true);
+        }
+    }
+
+    public void showAdView(boolean showView) {
+        if(mAdView != null) {
+            mAdView.setVisibility(showView?AdView.VISIBLE:AdView.GONE);
         }
     }
 
