@@ -333,7 +333,7 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
                 break;
             case 0:
                 getSupportActionBar().setTitle(R.string.all);
-                getSupportActionBar().setIcon(R.drawable.ic_statusbar_rss);
+                getSupportActionBar().setIcon(R.drawable.senbazuru_ui_icon);
                 break;
             case 1:
                 getSupportActionBar().setTitle(R.string.favorites);

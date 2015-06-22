@@ -110,17 +110,17 @@
     <string name="google_news_health">Health</string>
 
     <!-- ENTRIES -->
-    <string name="all">Origamis</string>
-    <string name="no_entries">No origamis</string>
+    <string name="all">All tutorials</string>
+    <string name="no_entries">No tutorials</string>
     <string name="favorites">Starred</string>
-    <string name="context_menu_share_starred">Share starred origamis</string>
+    <string name="context_menu_share_starred">Share starred tutorials</string>
     <string name="menu_star">Star</string>
     <string name="menu_unstar">Unstar</string>
     <string name="menu_share">Share</string>
     <string name="menu_full_screen">Full screen</string>
     <string name="menu_copy_clipboard">Copy link</string>
     <string name="menu_mark_as_unread">Mark as unread</string>
-    <string name="share_favorites_title">Senbazuru: starred origamis</string>
+    <string name="share_favorites_title">Senbazuru: starred origami tutorials</string>
     <string name="copied_clipboard">Link copied</string>
     <string name="get_full_text">Retrieve the full text</string>
     <string name="original_text">Show original text</string>
@@ -148,25 +148,25 @@
     <string name="settings_category_notifications">Notifications</string>
     <string name="settings_notifications_enabled">Enable notifications</string>
     <string name="settings_notifications_enabled_description">Enable notifications in case of new
-        origamis
+        tutorials
     </string>
     <string name="settings_notifications_ringtone">Ringtone</string>
     <string name="settings_notifications_ringtone_none">None</string>
     <string name="settings_notifications_vibrate">Vibrate</string>
-    <string name="settings_notifications_vibrate_description">Enable the vibration on new origamis
+    <string name="settings_notifications_vibrate_description">Enable the vibration on new tutorials
     </string>
     <string name="settings_notifications_light">Light</string>
-    <string name="settings_notifications_light_description">Enable notification light on new origamis</string>
+    <string name="settings_notifications_light_description">Enable notification light on new tutorials</string>
     <string name="settings_category_content_presentation">Content presentation</string>
-    <string name="settings_keep_time">Time that the origamis will be kept</string>
+    <string name="settings_keep_time">Time that the tutorials will be kept</string>
     <string name="settings_display_images">Display images</string>
-    <string name="settings_display_images_description">Display images in origamis</string>
+    <string name="settings_display_images_description">Display images in tutorials</string>
     <string name="settings_preload_image_mode">Preload images</string>
     <string name="settings_font_size">Text size</string>
-    <string name="settings_display_oldest_first">Origamis order</string>
-    <string name="settings_display_oldest_first_description">Display oldest origamis first</string>
-    <string name="settings_display_entries_fullscreen">Auto-fullscreen origamis</string>
-    <string name="settings_display_entries_fullscreen_description">Automatically display origamis in fullscreen</string>
+    <string name="settings_display_oldest_first">Tutorials order</string>
+    <string name="settings_display_oldest_first_description">Display oldest tutorials first</string>
+    <string name="settings_display_entries_fullscreen">Auto-fullscreen tutorials</string>
+    <string name="settings_display_entries_fullscreen_description">Automatically display tutorials in fullscreen</string>
     <string name="settings_refresh_on_open">Refresh feeds on open</string>
     <string name="settings_refresh_on_open_description">Refreshes all feeds after opening the
         application
@@ -190,8 +190,8 @@
     <string name="settings_proxy_type">Type</string>
 
     <plurals name="number_of_new_entries">
-        <item quantity="one">One new origami</item>
-        <item quantity="other">%d new origamis</item>
+        <item quantity="one">One new origami tutorial</item>
+        <item quantity="other">%d new origami tutorials</item>
     </plurals>
 
     <string-array name="settings_intervals">

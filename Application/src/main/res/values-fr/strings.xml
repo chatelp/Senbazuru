@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
  Copyright (c) 2012-2015 Frederic Julian
- Copyright (c) 2010-2012 Stefan Handschuh
+     Copyright (c) 2010-2012 Stefan Handschuh
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -107,8 +107,8 @@
     <string name="google_news_health">Santé</string>
 
     <!-- ENTRIES -->
-    <string name="all">Origamis</string>
-    <string name="no_entries">Pas d\'origami</string>
+    <string name="all">Tous les tutoriels</string>
+    <string name="no_entries">Pas de tutoriel</string>
     <string name="favorites">Favoris</string>
     <string name="context_menu_share_starred">Partager les favoris</string>
     <string name="menu_star">Mettre en favoris</string>
@@ -117,7 +117,7 @@
     <string name="menu_full_screen">Plein écran</string>
     <string name="menu_copy_clipboard">Copier le lien</string>
     <string name="menu_mark_as_unread">Marquer comme non lu</string>
-    <string name="share_favorites_title">Senbazuru : origamis favoris</string>
+    <string name="share_favorites_title">Senbazuru : tutoriels favoris</string>
     <string name="copied_clipboard">Lien copié</string>
     <string name="get_full_text">Récupérer le texte complet</string>
     <string name="original_text">Affiche le texte original</string>
@@ -145,26 +145,26 @@
     <string name="settings_category_notifications">Notifications</string>
     <string name="settings_notifications_enabled">Activer les notifications</string>
     <string name="settings_notifications_enabled_description">Active les notifications en cas de
-        nouveaux origamis
+        nouveaux tutoriels
     </string>
     <string name="settings_notifications_ringtone">Sonnerie</string>
     <string name="settings_notifications_ringtone_none">Aucune</string>
     <string name="settings_notifications_vibrate">Vibrer</string>
     <string name="settings_notifications_vibrate_description">Active la vibration pour les nouveaux
-        origamis
+        tutoriels
     </string>
     <string name="settings_notifications_light">LED</string>
-    <string name="settings_notifications_light_description">Active les notifications LED pour les nouveaux origamis</string>
+    <string name="settings_notifications_light_description">Active les notifications LED pour les nouveaux tutoriels</string>
     <string name="settings_category_content_presentation">Présentation des flux</string>
     <string name="settings_keep_time">Délai de conservation des flux</string>
     <string name="settings_display_images">Display images</string>
     <string name="settings_display_images_description">Display images in entries</string>
     <string name="settings_preload_image_mode">Préchargement des images</string>
     <string name="settings_font_size">Taille du texte</string>
-    <string name="settings_display_oldest_first">Ordre des origamis</string>
+    <string name="settings_display_oldest_first">Ordre des tutoriels</string>
     <string name="settings_display_oldest_first_description">Affiche les plus vieux en premier</string>
     <string name="settings_display_entries_fullscreen">Plein écran auto</string>
-    <string name="settings_display_entries_fullscreen_description">Affiche automatiquement les origamis en plein écran</string>
+    <string name="settings_display_entries_fullscreen_description">Affiche automatiquement les tutoriels en plein écran</string>
     <string name="settings_refresh_on_open">Mise à jour des flux à l\'ouverture</string>
     <string name="settings_refresh_on_open_description">Met à jour tous les flux à l\'ouverture de
         l\'application
@@ -190,8 +190,8 @@
     <string name="settings_proxy_type">Type</string>
 
     <plurals name="number_of_new_entries">
-        <item quantity="one">%d nouvel origami</item>
-        <item quantity="other">%d nouveaux origamis</item>
+        <item quantity="one">%d nouveau tutoriel d\'origami</item>
+        <item quantity="other">%d nouveaux tutoriels d\'origami</item>
     </plurals>
 
     <string-array name="settings_intervals">

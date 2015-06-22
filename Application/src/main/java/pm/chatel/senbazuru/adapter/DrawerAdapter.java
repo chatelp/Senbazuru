@@ -110,7 +110,7 @@ public class DrawerAdapter extends BaseAdapter {
 
         if (position == 0 || position == 1) {
             holder.titleTxt.setText(position == 0 ? R.string.all : R.string.favorites);
-            holder.iconView.setImageResource(position == 0 ? R.drawable.ic_statusbar_rss : R.drawable.rating_important);
+            holder.iconView.setImageResource(position == 0 ? R.drawable.senbazuru_ui_icon : R.drawable.rating_important);
 
             int unread = position == 0 ? mAllUnreadNumber : mFavoritesNumber;
             if (unread != 0) {
@@ -206,10 +206,8 @@ public class DrawerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (mFeedsCursor != null) {
-            return mFeedsCursor.getCount() + 2;
-        }
-        return 0;
+        //Nombre d'entrées dans le drawer
+        return 2;
     }
 
     @Override

@@ -225,7 +225,7 @@ public class FetcherService extends IntentService {
 
                     Notification.Builder notifBuilder = new Notification.Builder(MainApplication.getContext()) //
                             .setContentIntent(contentIntent) //
-                            .setSmallIcon(R.drawable.ic_statusbar_rss) //
+                            .setSmallIcon(R.drawable.senbazuru_ui_icon) //
                             .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.android_icon)) //
                             .setTicker(text) //
                             .setWhen(System.currentTimeMillis()) //
