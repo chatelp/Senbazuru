@@ -322,18 +322,15 @@ public class EntryFragment extends SwipeRefreshFragment implements BaseActivity.
     }
 
     private void refreshUI(Cursor entryCursor) {
-        if (entryCursor != null) {
-            String feedTitle = entryCursor.isNull(mFeedNamePos) ? entryCursor.getString(mFeedUrlPos) : entryCursor.getString(mFeedNamePos);
-            BaseActivity activity = (BaseActivity) getActivity();
-            activity.setTitle(feedTitle);
+        this.refreshUI(entryCursor,"");
+    }
 
-            byte[] iconBytes = entryCursor.getBlob(mFeedIconPos);
-            Bitmap bitmap = UiUtils.getScaledBitmap(iconBytes, 24);
-            if (bitmap != null) {
-                activity.getSupportActionBar().setIcon(new BitmapDrawable(getResources(), bitmap));
-            } else {
-                activity.getSupportActionBar().setIcon(null);
-            }
+    private void refreshUI(Cursor entryCursor, String entryTitle) {
+        if (entryCursor != null) {
+            BaseActivity activity = (BaseActivity) getActivity();
+            activity.setTitle(entryTitle);
+            activity.getSupportActionBar().setIcon(null);
+
 
             mFavorite = entryCursor.getInt(mIsFavoritePos) == 1;
             activity.invalidateOptionsMenu();
@@ -604,7 +601,7 @@ public class EntryFragment extends SwipeRefreshFragment implements BaseActivity.
                     view.setTag(newCursor);
 
                     if (pagerPos == mCurrentPagerPos) {
-                        refreshUI(newCursor);
+                        refreshUI(newCursor, title);
                     }
                 }
             }

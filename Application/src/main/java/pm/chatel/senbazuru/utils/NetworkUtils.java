@@ -56,9 +56,6 @@ public class NetworkUtils {
     public static final String TEMP_PREFIX = "TEMP__";
     public static final String ID_SEPARATOR = "__";
 
-    private static final String FILE_FAVICON = "/favicon.ico";
-    private static final String PROTOCOL_SEPARATOR = "://";
-
     private static final CookieManager COOKIE_MANAGER = new CookieManager() {{
         CookieHandler.setDefault(this);
     }};
@@ -180,41 +177,6 @@ public class NetworkUtils {
         output.close();
         inputStream.close();
         return result;
-    }
-
-    public static void retrieveFavicon(Context context, URL url, String id) {
-        boolean success = false;
-        HttpURLConnection iconURLConnection = null;
-
-        try {
-            iconURLConnection = setupConnection(new URL(url.getProtocol() + PROTOCOL_SEPARATOR + url.getHost() + FILE_FAVICON));
-
-            byte[] iconBytes = getBytes(iconURLConnection.getInputStream());
-            if (iconBytes != null && iconBytes.length > 0) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(iconBytes, 0, iconBytes.length);
-                if (bitmap != null) {
-                    if (bitmap.getWidth() != 0 && bitmap.getHeight() != 0) {
-                        ContentValues values = new ContentValues();
-                        values.put(FeedData.FeedColumns.ICON, iconBytes);
-                        context.getContentResolver().update(FeedData.FeedColumns.CONTENT_URI(id), values, null, null);
-                        success = true;
-                    }
-                    bitmap.recycle();
-                }
-            }
-        } catch (Throwable ignored) {
-        } finally {
-            if (iconURLConnection != null) {
-                iconURLConnection.disconnect();
-            }
-        }
-
-        if (!success) {
-            // no icon found or error
-            ContentValues values = new ContentValues();
-            values.putNull(FeedData.FeedColumns.ICON);
-            context.getContentResolver().update(FeedData.FeedColumns.CONTENT_URI(id), values, null, null);
-        }
     }
 
     public static HttpURLConnection setupConnection(String url) throws IOException {

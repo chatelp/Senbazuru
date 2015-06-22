@@ -57,13 +57,8 @@ public class FeedsCursorAdapter extends CursorLoaderExpandableListAdapter {
         TextView textView = ((TextView) view.findViewById(android.R.id.text1));
 
         final long feedId = cursor.getLong(mIdPos);
-        Bitmap bitmap = UiUtils.getFaviconBitmap(feedId, cursor, mIconPos);
 
-        if (bitmap != null) {
-            textView.setCompoundDrawablesWithIntrinsicBounds(new BitmapDrawable(context.getResources(), bitmap), null, null, null);
-        } else {
-            textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-        }
+        textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
 
         textView.setText((cursor.isNull(mNamePos) ? cursor.getString(mLinkPos) : cursor.getString(mNamePos)));
     }

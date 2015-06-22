@@ -36,22 +36,8 @@ import pm.chatel.senbazuru.R;
 
 public class UiUtils {
 
-    static private final LongSparseArray<Bitmap> FAVICON_CACHE = new LongSparseArray<>();
-
     static public int dpToPixel(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, MainApplication.getContext().getResources().getDisplayMetrics());
-    }
-
-    static public Bitmap getFaviconBitmap(long feedId, Cursor cursor, int iconCursorPos) {
-        Bitmap bitmap = UiUtils.FAVICON_CACHE.get(feedId);
-        if (bitmap == null) {
-            byte[] iconBytes = cursor.getBlob(iconCursorPos);
-            if (iconBytes != null && iconBytes.length > 0) {
-                bitmap = UiUtils.getScaledBitmap(iconBytes, 18);
-                UiUtils.FAVICON_CACHE.put(feedId, bitmap);
-            }
-        }
-        return bitmap;
     }
 
     static public Bitmap getScaledBitmap(byte[] iconBytes, int sizeInDp) {

@@ -525,20 +525,6 @@ public class FetcherService extends IntentService {
                     cr.update(FeedColumns.CONTENT_URI(id), values, null, null);
                 }
             } finally {
-
-				/* check and optionally find favicon */
-                try {
-                    if (handler != null && cursor.getBlob(iconPosition) == null) {
-                        String feedLink = handler.getFeedLink();
-                        if (feedLink != null) {
-                            NetworkUtils.retrieveFavicon(this, new URL(feedLink), id);
-                        } else {
-                            NetworkUtils.retrieveFavicon(this, connection.getURL(), id);
-                        }
-                    }
-                } catch (Throwable ignored) {
-                }
-
                 if (connection != null) {
                     connection.disconnect();
                 }
