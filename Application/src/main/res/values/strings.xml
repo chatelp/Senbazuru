@@ -28,6 +28,7 @@
     <!-- GENERAL -->
     <string name="app_name">Senbazuru</string>
     <string name="about_senbazuru">About Senbazuru</string>
+    <string name="about_app">About this app</string>
     <string name="welcome_title">Welcome to Senbazuru. Would you like to add one feed?</string>
     <string name="never">never</string>
     <string name="update">Update</string>
@@ -113,6 +114,8 @@
     <string name="all">All tutorials</string>
     <string name="no_entries">No tutorials</string>
     <string name="favorites">Starred</string>
+    <string name="about">About us</string>
+    <string name="find">Find tutorial</string>
     <string name="context_menu_share_starred">Share starred tutorials</string>
     <string name="menu_star">Star</string>
     <string name="menu_unstar">Unstar</string>

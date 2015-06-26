@@ -19,16 +19,12 @@
 
 package pm.chatel.senbazuru.activity;
 
-import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,8 +39,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.melnykov.fab.FloatingActionButton;
-
 import pm.chatel.senbazuru.Constants;
 import pm.chatel.senbazuru.R;
 import pm.chatel.senbazuru.adapter.DrawerAdapter;
@@ -56,7 +50,6 @@ import pm.chatel.senbazuru.provider.FeedDataContentProvider;
 import pm.chatel.senbazuru.service.FetcherService;
 import pm.chatel.senbazuru.service.RefreshService;
 import pm.chatel.senbazuru.utils.PrefUtils;
-import pm.chatel.senbazuru.utils.UiUtils;
 
 public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -72,7 +65,9 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
             ") > 0)";
 
     private static final int LOADER_ID = 0;
-    private static final int SEARCH_DRAWER_POSITION = -1;
+    private static final int ABOUT_DRAWER_POSITION = -1;
+    private static final int SEARCH_DRAWER_POSITION = 2;
+
 
     private EntriesListFragment mEntriesFragment;
     private DrawerLayout mDrawerLayout;
@@ -215,6 +210,10 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
         }
     }
 
+    public void onClickAbout(View view) {
+        startActivity(new Intent(this, WebPopupActivity.class).setAction(WebPopupActivity.ACTION_LOAD_ABOUT));
+    }
+
     public void onClickSettings(View view) {
         startActivity(new Intent(this, GeneralPrefsActivity.class));
     }
@@ -276,6 +275,10 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
         boolean showFeedInfo = true;
 
         switch (position) {
+            case ABOUT_DRAWER_POSITION:
+                newUri = EntryColumns.SEARCH_URI(mEntriesFragment.getCurrentSearch());
+                PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, true);
+                break;
             case SEARCH_DRAWER_POSITION:
                 newUri = EntryColumns.SEARCH_URI(mEntriesFragment.getCurrentSearch());
                 PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, true);
@@ -288,21 +291,9 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
                 newUri = EntryColumns.FAVORITES_CONTENT_URI;
                 PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, false);
                 break;
-            default:
-                long feedOrGroupId = mDrawerAdapter.getItemId(position);
-                if (mDrawerAdapter.isItemAGroup(position)) {
-                    newUri = EntryColumns.ENTRIES_FOR_GROUP_CONTENT_URI(feedOrGroupId);
-                } else {
-                    byte[] iconBytes = mDrawerAdapter.getItemIcon(position);
-                    Bitmap bitmap = UiUtils.getScaledBitmap(iconBytes, 24);
-                    if (bitmap != null) {
-                        mIcon = new BitmapDrawable(getResources(), bitmap);
-                    }
 
-                    newUri = EntryColumns.ENTRIES_FOR_FEED_CONTENT_URI(feedOrGroupId);
-                    showFeedInfo = false;
-                }
-                mTitle = mDrawerAdapter.getItemName(position);
+            default:
+                newUri = EntryColumns.ALL_ENTRIES_CONTENT_URI;
                 PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, false);
                 break;
         }
@@ -327,6 +318,10 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
 
         // Set title & icon
         switch (mCurrentDrawerPos) {
+            case ABOUT_DRAWER_POSITION:
+                getSupportActionBar().setTitle(android.R.string.search_go);
+                getSupportActionBar().setIcon(R.drawable.action_search);
+                break;
             case SEARCH_DRAWER_POSITION:
                 getSupportActionBar().setTitle(android.R.string.search_go);
                 getSupportActionBar().setIcon(R.drawable.action_search);

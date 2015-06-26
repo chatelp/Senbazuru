@@ -149,8 +149,10 @@ public class DrawerAdapter extends BaseAdapter {
                     }
                 }
             }
+        } else if (position == 2) {
+            holder.titleTxt.setText(R.string.find);
+            holder.iconView.setImageResource(R.drawable.action_search);
         }
-
 
         /*if (mFeedsCursor != null && mFeedsCursor.moveToPosition(position - 2)) {
             holder.titleTxt.setText((mFeedsCursor.isNull(POS_NAME) ? mFeedsCursor.getString(POS_URL) : mFeedsCursor.getString(POS_NAME)));
@@ -207,7 +209,7 @@ public class DrawerAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         //Nombre d'entrées dans le drawer
-        return 2;
+        return 3;
     }
 
     @Override

@@ -25,6 +25,7 @@
     <!-- GENERAL -->
     <string name="app_name">Senbazuru</string>
     <string name="about_senbazuru">À propos de Senbazuru</string>
+    <string name="about_app">À propos de cette application</string>
     <string name="welcome_title">Bienvenue sur Senbazuru. Voulez vous ajouter un flux ?</string>
     <string name="never">jamais</string>
     <string name="update">Mise à jour</string>
@@ -110,6 +111,8 @@
     <string name="all">Tous les tutoriels</string>
     <string name="no_entries">Pas de tutoriel</string>
     <string name="favorites">Favoris</string>
+    <string name="about">A propos</string>
+    <string name="find">Rechercher un tutoriel</string>
     <string name="context_menu_share_starred">Partager les favoris</string>
     <string name="menu_star">Mettre en favoris</string>
     <string name="menu_unstar">Enlever des favoris</string>

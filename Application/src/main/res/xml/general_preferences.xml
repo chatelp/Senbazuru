@@ -6,7 +6,7 @@
     <PreferenceScreen
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:title="@string/about_senbazuru">
+        android:title="@string/about_app">
 
         <intent
             android:action="android.intent.action.VIEW"
