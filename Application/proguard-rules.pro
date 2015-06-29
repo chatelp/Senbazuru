@@ -8,3 +8,8 @@
 
 # for picasso
 -dontwarn com.squareup.okhttp.**
+-dontwarn sun.misc.Unsafe
+
+#for crashlytics
+-keepattributes SourceFile,LineNumberTable
+

@@ -108,6 +108,7 @@ public class RssAtomParser extends DefaultHandler {
     private static final String TAG_AUTHOR = "author";
     private static final String TAG_CREATOR = "creator";
     private static final String TAG_NAME = "name";
+    private static final String TAG_CATEGORY = "category";
 
     private static final String ATTRIBUTE_URL = "url";
     private static final String ATTRIBUTE_HREF = "href";
@@ -145,6 +146,8 @@ public class RssAtomParser extends DefaultHandler {
     private boolean mLastBuildDateTagEntered = false;
     private boolean mGuidTagEntered = false;
     private boolean mAuthorTagEntered = false;
+    private boolean mCategoryTagEntered = false;
+
     private StringBuilder mTitle;
     private StringBuilder mDateStringBuilder;
     private String mFeedLink;
@@ -164,6 +167,8 @@ public class RssAtomParser extends DefaultHandler {
     private long mNow = System.currentTimeMillis();
     private StringBuilder mGuid;
     private StringBuilder mAuthor, mTmpAuthor;
+    private StringBuilder mCategory;
+    private ArrayList<String> mEntryCategories = new ArrayList<String>();
 
     public RssAtomParser(Date realLastUpdateDate, long keepDateBorderTime, final String id, String feedName, String url, boolean retrieveFullText) {
         mKeepDateBorder = new Date(keepDateBorderTime);
@@ -277,6 +282,9 @@ public class RssAtomParser extends DefaultHandler {
             if (mTmpAuthor == null) {
                 mTmpAuthor = new StringBuilder();
             }
+        } else if (TAG_CATEGORY.equals(localName)) {
+            mCategoryTagEntered = true;
+            mCategory = new StringBuilder();
         }
     }
 
@@ -312,6 +320,8 @@ public class RssAtomParser extends DefaultHandler {
             mGuid.append(ch, start, length);
         } else if (mAuthorTagEntered) {
             mTmpAuthor.append(ch, start, length);
+        } else if (mCategoryTagEntered) {
+            mCategory.append(ch, start, length);
         }
     }
 
@@ -399,6 +409,11 @@ public class RssAtomParser extends DefaultHandler {
 
                     if (mAuthor != null) {
                         values.put(EntryColumns.AUTHOR, mAuthor.toString());
+                    }
+
+                    if (mEntryCategories.size() > 0) {
+                        //values.put(FeedData.CategoryColumns.CATEGORY, "");
+                        mEntryCategories = new ArrayList<String>();
                     }
 
                     String enclosureString = null;
@@ -494,6 +509,9 @@ public class RssAtomParser extends DefaultHandler {
             }
 
             mTmpAuthor = null;
+        } else if (TAG_CATEGORY.equals(localName)) {
+            mEntryCategories.add(mCategory.toString());
+            mCategoryTagEntered = false;
         }
     }
 

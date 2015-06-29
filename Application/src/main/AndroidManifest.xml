@@ -71,7 +71,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="vnd.android.cursor.item/vnd.flym.entry" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.senbazuru.entry" />
             </intent-filter>
         </activity>
         <activity
@@ -134,6 +134,9 @@
         </receiver>
         <service android:name=".gcm.GcmIntentService" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="8000ceb2255c262cf53e89f19403744ce76e6644" />
     </application>
 
 </manifest>

@@ -62,13 +62,11 @@ import android.widget.Toast;
 import pm.chatel.senbazuru.BuildConfig;
 import pm.chatel.senbazuru.Constants;
 import pm.chatel.senbazuru.R;
-import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
-import pm.chatel.senbazuru.provider.FeedData.FeedColumns;
-import pm.chatel.senbazuru.provider.FeedData.FilterColumns;
-import pm.chatel.senbazuru.provider.FeedData.TaskColumns;
 import pm.chatel.senbazuru.utils.NetworkUtils;
 
 import java.util.Date;
+
+import static pm.chatel.senbazuru.provider.FeedData.*;
 
 public class FeedDataContentProvider extends ContentProvider {
 
@@ -94,32 +92,40 @@ public class FeedDataContentProvider extends ContentProvider {
     public static final int URI_TASK = 20;
     public static final int URI_SEARCH = 21;
     public static final int URI_SEARCH_ENTRY = 22;
+    public static final int URI_CATEGORIES = 23;
+    public static final int URI_CATEGORY = 24;
+    public static final int URI_CATEGORIES_FOR_ENTRY = 25;
+    public static final int URI_CATEGORY_FOR_ENTRY = 26;
 
     public static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "grouped_feeds", URI_GROUPED_FEEDS);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "groups", URI_GROUPS);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "groups/#", URI_GROUP);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "groups/#/feeds", URI_FEEDS_FOR_GROUPS);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "feeds", URI_FEEDS);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "feeds/#", URI_FEED);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "feeds/#/entries", URI_ENTRIES_FOR_FEED);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "feeds/#/entries/#", URI_ENTRY_FOR_FEED);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "groups/#/entries", URI_ENTRIES_FOR_GROUP);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "groups/#/entries/#", URI_ENTRY_FOR_GROUP);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "filters", URI_FILTERS);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "feeds/#/filters", URI_FILTERS_FOR_FEED);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "entries", URI_ENTRIES);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "entries/#", URI_ENTRY);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "all_entries", URI_ALL_ENTRIES);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "all_entries/#", URI_ALL_ENTRIES_ENTRY);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "favorites", URI_FAVORITES);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "favorites/#", URI_FAVORITES_ENTRY);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "tasks", URI_TASKS);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "tasks/#", URI_TASK);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "entries/search/*", URI_SEARCH);
-        URI_MATCHER.addURI(FeedData.AUTHORITY, "entries/search/*/#", URI_SEARCH_ENTRY);
+        URI_MATCHER.addURI(AUTHORITY, "grouped_feeds", URI_GROUPED_FEEDS);
+        URI_MATCHER.addURI(AUTHORITY, "groups", URI_GROUPS);
+        URI_MATCHER.addURI(AUTHORITY, "groups/#", URI_GROUP);
+        URI_MATCHER.addURI(AUTHORITY, "groups/#/feeds", URI_FEEDS_FOR_GROUPS);
+        URI_MATCHER.addURI(AUTHORITY, "feeds", URI_FEEDS);
+        URI_MATCHER.addURI(AUTHORITY, "feeds/#", URI_FEED);
+        URI_MATCHER.addURI(AUTHORITY, "feeds/#/entries", URI_ENTRIES_FOR_FEED);
+        URI_MATCHER.addURI(AUTHORITY, "feeds/#/entries/#", URI_ENTRY_FOR_FEED);
+        URI_MATCHER.addURI(AUTHORITY, "groups/#/entries", URI_ENTRIES_FOR_GROUP);
+        URI_MATCHER.addURI(AUTHORITY, "groups/#/entries/#", URI_ENTRY_FOR_GROUP);
+        URI_MATCHER.addURI(AUTHORITY, "filters", URI_FILTERS);
+        URI_MATCHER.addURI(AUTHORITY, "feeds/#/filters", URI_FILTERS_FOR_FEED);
+        URI_MATCHER.addURI(AUTHORITY, "entries", URI_ENTRIES);
+        URI_MATCHER.addURI(AUTHORITY, "entries/#", URI_ENTRY);
+        URI_MATCHER.addURI(AUTHORITY, "all_entries", URI_ALL_ENTRIES);
+        URI_MATCHER.addURI(AUTHORITY, "all_entries/#", URI_ALL_ENTRIES_ENTRY);
+        URI_MATCHER.addURI(AUTHORITY, "favorites", URI_FAVORITES);
+        URI_MATCHER.addURI(AUTHORITY, "favorites/#", URI_FAVORITES_ENTRY);
+        URI_MATCHER.addURI(AUTHORITY, "tasks", URI_TASKS);
+        URI_MATCHER.addURI(AUTHORITY, "tasks/#", URI_TASK);
+        URI_MATCHER.addURI(AUTHORITY, "entries/search/*", URI_SEARCH);
+        URI_MATCHER.addURI(AUTHORITY, "entries/search/*/#", URI_SEARCH_ENTRY);
+        URI_MATCHER.addURI(AUTHORITY, "categories", URI_CATEGORIES);
+        URI_MATCHER.addURI(AUTHORITY, "categories/#", URI_CATEGORY);
+        URI_MATCHER.addURI(AUTHORITY, "entries/#/categories/#", URI_CATEGORY_FOR_ENTRY);
+        URI_MATCHER.addURI(AUTHORITY, "entries/#/categories", URI_CATEGORIES_FOR_ENTRY);
     }
 
     private final String[] MAX_PRIORITY = new String[]{"MAX(" + FeedColumns.PRIORITY + ")"};
@@ -174,31 +180,37 @@ public class FeedDataContentProvider extends ContentProvider {
             case URI_GROUPS:
             case URI_FEEDS_FOR_GROUPS:
             case URI_FEEDS:
-                return "vnd.android.cursor.dir/vnd.flym.feed";
+                return "vnd.android.cursor.dir/vnd.senbazuru.feed";
             case URI_GROUP:
             case URI_FEED:
-                return "vnd.android.cursor.item/vnd.flym.feed";
+                return "vnd.android.cursor.item/vnd.senbazuru.feed";
             case URI_FILTERS:
             case URI_FILTERS_FOR_FEED:
-                return "vnd.android.cursor.dir/vnd.flym.filter";
+                return "vnd.android.cursor.dir/vnd.senbazuru.filter";
             case URI_FAVORITES:
             case URI_ALL_ENTRIES:
             case URI_ENTRIES:
             case URI_ENTRIES_FOR_FEED:
             case URI_ENTRIES_FOR_GROUP:
             case URI_SEARCH:
-                return "vnd.android.cursor.dir/vnd.flym.entry";
+                return "vnd.android.cursor.dir/vnd.senbazuru.entry";
             case URI_FAVORITES_ENTRY:
             case URI_ENTRY:
             case URI_ALL_ENTRIES_ENTRY:
             case URI_ENTRY_FOR_FEED:
             case URI_ENTRY_FOR_GROUP:
             case URI_SEARCH_ENTRY:
-                return "vnd.android.cursor.item/vnd.flym.entry";
+                return "vnd.android.cursor.item/vnd.senbazuru.entry";
             case URI_TASKS:
-                return "vnd.android.cursor.dir/vnd.flym.task";
+                return "vnd.android.cursor.dir/vnd.senbazuru.task";
             case URI_TASK:
-                return "vnd.android.cursor.item/vnd.flym.task";
+                return "vnd.android.cursor.item/vnd.senbazuru.task";
+            case URI_CATEGORY:
+            case URI_CATEGORY_FOR_ENTRY:
+                return "vnd.android.cursor.item/vnd.senbazuru.category";
+            case URI_CATEGORIES:
+            case URI_CATEGORIES_FOR_ENTRY:
+                return "vnd.android.cursor.dir/vnd.senbazuru.category";
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
@@ -214,7 +226,7 @@ public class FeedDataContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         // This is a debug code to allow to visualize the task with the ContentProviderHelper app
-        if (uri != null && BuildConfig.DEBUG && FeedData.CONTENT_AUTHORITY.equals(uri.toString())) {
+        if (uri != null && BuildConfig.DEBUG && CONTENT_AUTHORITY.equals(uri.toString())) {
             SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
             queryBuilder.setTables(TaskColumns.TABLE_NAME);
             SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
@@ -231,7 +243,7 @@ public class FeedDataContentProvider extends ContentProvider {
 
         switch (matchCode) {
             case URI_GROUPED_FEEDS: {
-                queryBuilder.setTables(FeedData.FEEDS_TABLE_WITH_GROUP_PRIORITY);
+                queryBuilder.setTables(FEEDS_TABLE_WITH_GROUP_PRIORITY);
                 sortOrder = "IFNULL(group_priority, " + FeedColumns.PRIORITY + "), IFNULL(" + FeedColumns.GROUP_ID + ", " + FeedColumns._ID + "), " + FeedColumns.IS_GROUP + " DESC, " + FeedColumns.PRIORITY;
                 break;
             }
@@ -269,39 +281,39 @@ public class FeedDataContentProvider extends ContentProvider {
             case URI_ENTRY_FOR_FEED:
             case URI_ENTRY_FOR_GROUP:
             case URI_SEARCH_ENTRY: {
-                queryBuilder.setTables(FeedData.ENTRIES_TABLE_WITH_FEED_INFO);
+                queryBuilder.setTables(ENTRIES_TABLE_WITH_FEED_INFO);
                 queryBuilder.appendWhere(new StringBuilder(EntryColumns._ID).append('=').append(uri.getPathSegments().get(3)));
                 break;
             }
             case URI_ENTRIES_FOR_FEED: {
-                queryBuilder.setTables(FeedData.ENTRIES_TABLE_WITH_FEED_INFO);
+                queryBuilder.setTables(ENTRIES_TABLE_WITH_FEED_INFO);
                 queryBuilder.appendWhere(new StringBuilder(EntryColumns.FEED_ID).append('=').append(uri.getPathSegments().get(1)));
                 break;
             }
             case URI_ENTRIES_FOR_GROUP: {
-                queryBuilder.setTables(FeedData.ENTRIES_TABLE_WITH_FEED_INFO);
+                queryBuilder.setTables(ENTRIES_TABLE_WITH_FEED_INFO);
                 queryBuilder.appendWhere(new StringBuilder(FeedColumns.GROUP_ID).append('=').append(uri.getPathSegments().get(1)));
                 break;
             }
             case URI_ALL_ENTRIES:
             case URI_ENTRIES: {
-                queryBuilder.setTables(FeedData.ENTRIES_TABLE_WITH_FEED_INFO);
+                queryBuilder.setTables(ENTRIES_TABLE_WITH_FEED_INFO);
                 break;
             }
             case URI_SEARCH: {
-                queryBuilder.setTables(FeedData.ENTRIES_TABLE_WITH_FEED_INFO);
+                queryBuilder.setTables(ENTRIES_TABLE_WITH_FEED_INFO);
                 queryBuilder.appendWhere(getSearchWhereClause(uri.getPathSegments().get(2)));
                 break;
             }
             case URI_FAVORITES_ENTRY:
             case URI_ALL_ENTRIES_ENTRY:
             case URI_ENTRY: {
-                queryBuilder.setTables(FeedData.ENTRIES_TABLE_WITH_FEED_INFO);
+                queryBuilder.setTables(ENTRIES_TABLE_WITH_FEED_INFO);
                 queryBuilder.appendWhere(new StringBuilder(EntryColumns._ID).append('=').append(uri.getPathSegments().get(1)));
                 break;
             }
             case URI_FAVORITES: {
-                queryBuilder.setTables(FeedData.ENTRIES_TABLE_WITH_FEED_INFO);
+                queryBuilder.setTables(ENTRIES_TABLE_WITH_FEED_INFO);
                 queryBuilder.appendWhere(new StringBuilder(EntryColumns.IS_FAVORITE).append(Constants.DB_IS_TRUE));
                 break;
             }
@@ -739,6 +751,7 @@ public class FeedDataContentProvider extends ContentProvider {
             cr.notifyChange(EntryColumns.FAVORITES_CONTENT_URI, null);
             cr.notifyChange(FeedColumns.CONTENT_URI, null);
             cr.notifyChange(FeedColumns.GROUPS_CONTENT_URI, null);
+            cr.notifyChange(CategoryColumns.CONTENT_URI,null);
         }
     }
 }

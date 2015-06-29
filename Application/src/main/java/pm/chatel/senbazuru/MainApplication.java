@@ -23,6 +23,8 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import pm.chatel.senbazuru.utils.PrefUtils;
 
 public class MainApplication extends Application {
@@ -36,6 +38,7 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         mContext = getApplicationContext();
 
         PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, false); // init
