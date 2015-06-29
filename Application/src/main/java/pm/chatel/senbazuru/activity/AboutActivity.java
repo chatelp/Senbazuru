@@ -46,9 +46,9 @@ public class AboutActivity extends BaseActivity {
         PackageManager manager = this.getPackageManager();
         try {
             PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
-            title = "Senbazuru version " + info.versionName;
+            title = "version " + info.versionName + " - build " + info.versionCode;
         } catch (NameNotFoundException unused) {
-            title = "Senbazuru";
+            title = "Senbazuru pour Android";
         }
         TextView titleView = (TextView) findViewById(R.id.about_title);
         titleView.setText(title);
