@@ -387,6 +387,12 @@ public class FeedDataContentProvider extends ContentProvider {
                 newId = database.insert(TaskColumns.TABLE_NAME, null, values);
                 break;
             }
+            case URI_CATEGORIES_FOR_ENTRY: {
+                String segment = uri.getPathSegments().get(1);
+                values.put(CategoryColumns.ENTRY_ID, segment);
+                newId = database.insert(CategoryColumns.TABLE_NAME, null, values);
+                break;
+            }
             default:
                 throw new IllegalArgumentException("Illegal insert. Match code=" + matchCode + "; uri=" + uri);
         }

@@ -142,17 +142,14 @@ public class EntryView extends WebView {
     }
 
     public void setHtml(long entryId, String title, String link, String contentText, String enclosure, String author, long timestamp, boolean preferFullText) {
-        if (PrefUtils.getBoolean(PrefUtils.DISPLAY_IMAGES, true)) {
+
             contentText = HtmlUtils.replaceImageURLs(contentText, entryId);
             if (getSettings().getBlockNetworkImage()) {
                 // setBlockNetworkImage(false) calls postSync, which takes time, so we clean up the html first and change the value afterwards
                 loadData("", TEXT_HTML, Constants.UTF8);
                 getSettings().setBlockNetworkImage(false);
             }
-        } else {
-            contentText = contentText.replaceAll(HTML_IMG_REGEX, "");
-            getSettings().setBlockNetworkImage(true);
-        }
+
 
 
         // String baseUrl = "";

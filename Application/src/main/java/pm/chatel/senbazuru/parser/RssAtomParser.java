@@ -78,6 +78,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static pm.chatel.senbazuru.provider.FeedData.*;
+
 public class RssAtomParser extends DefaultHandler {
     private static final String TAG = RssAtomParser.class.getSimpleName();
 
@@ -412,7 +414,9 @@ public class RssAtomParser extends DefaultHandler {
                     }
 
                     if (mEntryCategories.size() > 0) {
-                        //values.put(FeedData.CategoryColumns.CATEGORY, "");
+                        for (String category:mEntryCategories) {
+                            //values.put(CategoryColumns.CATEGORY, category);
+                        }
                         mEntryCategories = new ArrayList<String>();
                     }
 
@@ -653,7 +657,7 @@ public class RssAtomParser extends DefaultHandler {
         }
         values.putNull(FeedColumns.ERROR);
         values.put(FeedColumns.LAST_UPDATE, System.currentTimeMillis() - 3000); // by precaution to not miss some feeds
-        values.put(FeedData.FeedColumns.REAL_LAST_UPDATE, mNewRealLastUpdate);
+        values.put(FeedColumns.REAL_LAST_UPDATE, mNewRealLastUpdate);
         cr.update(FeedColumns.CONTENT_URI(mId), values, null, null);
 
         super.endDocument();

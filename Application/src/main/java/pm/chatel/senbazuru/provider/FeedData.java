@@ -242,6 +242,7 @@ public class FeedData {
         public static final String CATEGORY = "category";
         public static final String[] PROJECTION_ID = new String[]{CategoryColumns._ID};
 
+        public static final String[][] COLUMNS = new String[][]{{_ID, TYPE_PRIMARY_KEY}, {ENTRY_ID, TYPE_EXTERNAL_ID}, {CATEGORY, TYPE_TEXT}};
 
         public static Uri CONTENT_URI(String categoryId) {
             return Uri.parse(CONTENT_AUTHORITY + "/categories/" + categoryId);
@@ -270,10 +271,6 @@ public class FeedData {
         public static Uri CATEGORIES_FOR_FEED_CONTENT_URI_AND_ENTRY_CONTENT_URI(long feedId, long entryId) {
             return Uri.parse(CONTENT_AUTHORITY + "/feeds/" + feedId + "/entries/" + entryId + "/categories");
         }
-
-        public static final String[][] COLUMNS = new String[][]{{_ID, TYPE_PRIMARY_KEY}, {ENTRY_ID, TYPE_EXTERNAL_ID}, {CATEGORY, TYPE_TEXT}};
-
-
 
     }
 

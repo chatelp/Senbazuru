@@ -57,6 +57,8 @@ import pm.chatel.senbazuru.provider.FeedData.TaskColumns;
 
 import java.io.File;
 
+import static pm.chatel.senbazuru.provider.FeedData.*;
+
 class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "FeedEx.db";
@@ -78,6 +80,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
         database.execSQL(createTable(FilterColumns.TABLE_NAME, FilterColumns.COLUMNS));
         database.execSQL(createTable(EntryColumns.TABLE_NAME, EntryColumns.COLUMNS));
         database.execSQL(createTable(TaskColumns.TABLE_NAME, TaskColumns.COLUMNS));
+        database.execSQL(createTable(CategoryColumns.TABLE_NAME, CategoryColumns.COLUMNS));
+
     }
 
     private String createTable(String tableName, String[][] columns) {
@@ -101,10 +105,10 @@ class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
-            executeCatchedSQL(database, ALTER_TABLE + FeedColumns.TABLE_NAME + ADD + FeedColumns.REAL_LAST_UPDATE + ' ' + FeedData.TYPE_DATE_TIME);
+            executeCatchedSQL(database, ALTER_TABLE + FeedColumns.TABLE_NAME + ADD + FeedColumns.REAL_LAST_UPDATE + ' ' + TYPE_DATE_TIME);
         }
         if (oldVersion < 3) {
-            executeCatchedSQL(database, ALTER_TABLE + FeedColumns.TABLE_NAME + ADD + FeedColumns.RETRIEVE_FULLTEXT + ' ' + FeedData.TYPE_BOOLEAN);
+            executeCatchedSQL(database, ALTER_TABLE + FeedColumns.TABLE_NAME + ADD + FeedColumns.RETRIEVE_FULLTEXT + ' ' + TYPE_BOOLEAN);
         }
         if (oldVersion < 4) {
             executeCatchedSQL(database, createTable(TaskColumns.TABLE_NAME, TaskColumns.COLUMNS));
@@ -118,13 +122,13 @@ class DatabaseHelper extends SQLiteOpenHelper {
             executeCatchedSQL(database, ALTER_TABLE + TaskColumns.TABLE_NAME + ADD + "UNIQUE(" + TaskColumns.ENTRY_ID + ", " + TaskColumns.IMG_URL_TO_DL + ") ON CONFLICT IGNORE");
         }
         if (oldVersion < 6) {
-            executeCatchedSQL(database, ALTER_TABLE + FilterColumns.TABLE_NAME + ADD + FilterColumns.IS_ACCEPT_RULE + ' ' + FeedData.TYPE_BOOLEAN);
+            executeCatchedSQL(database, ALTER_TABLE + FilterColumns.TABLE_NAME + ADD + FilterColumns.IS_ACCEPT_RULE + ' ' + TYPE_BOOLEAN);
         }
         if (oldVersion < 7) {
-            executeCatchedSQL(database, ALTER_TABLE + EntryColumns.TABLE_NAME + ADD + EntryColumns.FETCH_DATE + ' ' + FeedData.TYPE_DATE_TIME);
+            executeCatchedSQL(database, ALTER_TABLE + EntryColumns.TABLE_NAME + ADD + EntryColumns.FETCH_DATE + ' ' + TYPE_DATE_TIME);
         }
         if (oldVersion < 8) {
-            executeCatchedSQL(database, ALTER_TABLE + EntryColumns.TABLE_NAME + ADD + EntryColumns.IMAGE_URL + ' ' + FeedData.TYPE_TEXT);
+            executeCatchedSQL(database, ALTER_TABLE + EntryColumns.TABLE_NAME + ADD + EntryColumns.IMAGE_URL + ' ' + TYPE_TEXT);
         }
     }
 
