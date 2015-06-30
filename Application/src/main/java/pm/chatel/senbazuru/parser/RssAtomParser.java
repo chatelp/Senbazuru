@@ -44,8 +44,6 @@
 
 package pm.chatel.senbazuru.parser;
 
-import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -56,10 +54,10 @@ import android.util.Log;
 
 import pm.chatel.senbazuru.Constants;
 import pm.chatel.senbazuru.MainApplication;
-import pm.chatel.senbazuru.provider.FeedData;
 import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
 import pm.chatel.senbazuru.provider.FeedData.FeedColumns;
 import pm.chatel.senbazuru.provider.FeedData.FilterColumns;
+import pm.chatel.senbazuru.provider.FeedData.CategoryColumns;
 import pm.chatel.senbazuru.service.FetcherService;
 import pm.chatel.senbazuru.utils.HtmlUtils;
 import pm.chatel.senbazuru.utils.NetworkUtils;
@@ -77,8 +75,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static pm.chatel.senbazuru.provider.FeedData.*;
 
 public class RssAtomParser extends DefaultHandler {
     private static final String TAG = RssAtomParser.class.getSimpleName();
@@ -134,7 +130,7 @@ public class RssAtomParser extends DefaultHandler {
     private final String mFeedBaseUrl;
     private final Date mKeepDateBorder;
     private final FeedFilters mFilters;
-    private final ArrayList<ContentProviderOperation> mInserts = new ArrayList<>();
+    private final ArrayList<String> mInsertedEntriesId = new ArrayList<String>();
     private final ArrayList<ArrayList<String>> mInsertedEntriesImages = new ArrayList<>();
     private long mNewRealLastUpdate;
     private boolean mEntryTagEntered = false;
@@ -373,14 +369,14 @@ public class RssAtomParser extends DefaultHandler {
             }
 
             if (mTitle != null && (mEntryDate == null || (mEntryDate.after(mRealLastUpdateDate) && mEntryDate.after(mKeepDateBorder)))) {
-                ContentValues values = new ContentValues();
+                ContentValues entryValues = new ContentValues();
 
                 if (mEntryDate != null && mEntryDate.getTime() > mNewRealLastUpdate) {
                     mNewRealLastUpdate = mEntryDate.getTime();
                 }
 
                 String improvedTitle = unescapeTitle(mTitle.toString().trim());
-                values.put(EntryColumns.TITLE, improvedTitle);
+                entryValues.put(EntryColumns.TITLE, improvedTitle);
 
                 String improvedContent = null;
                 String mainImageUrl = null;
@@ -398,34 +394,29 @@ public class RssAtomParser extends DefaultHandler {
                     }
 
                     if (improvedContent != null) {
-                        values.put(EntryColumns.ABSTRACT, improvedContent);
+                        entryValues.put(EntryColumns.ABSTRACT, improvedContent);
                     }
                 }
 
                 if (mainImageUrl != null) {
-                    values.put(EntryColumns.IMAGE_URL, mainImageUrl);
+                    entryValues.put(EntryColumns.IMAGE_URL, mainImageUrl);
                 }
 
                 // Try to find if the entry is not filtered and need to be processed
                 if (!mFilters.isEntryFiltered(improvedTitle, improvedContent)) {
 
                     if (mAuthor != null) {
-                        values.put(EntryColumns.AUTHOR, mAuthor.toString());
+                        entryValues.put(EntryColumns.AUTHOR, mAuthor.toString());
                     }
 
-                    if (mEntryCategories.size() > 0) {
-                        for (String category:mEntryCategories) {
-                            //values.put(CategoryColumns.CATEGORY, category);
-                        }
-                        mEntryCategories = new ArrayList<String>();
-                    }
+                    // CATEGORIES HERE !
 
                     String enclosureString = null;
                     StringBuilder existenceStringBuilder = new StringBuilder(EntryColumns.LINK).append(Constants.DB_ARG);
 
                     if (mEnclosure != null && mEnclosure.length() > 0) {
                         enclosureString = mEnclosure.toString();
-                        values.put(EntryColumns.ENCLOSURE, enclosureString);
+                        entryValues.put(EntryColumns.ENCLOSURE, enclosureString);
                         existenceStringBuilder.append(Constants.DB_AND).append(EntryColumns.ENCLOSURE).append(Constants.DB_ARG);
                     }
 
@@ -433,7 +424,7 @@ public class RssAtomParser extends DefaultHandler {
 
                     if (mGuid != null && mGuid.length() > 0) {
                         guidString = mGuid.toString();
-                        values.put(EntryColumns.GUID, guidString);
+                        entryValues.put(EntryColumns.GUID, guidString);
                         existenceStringBuilder.append(Constants.DB_AND).append(EntryColumns.GUID).append(Constants.DB_ARG);
                     }
 
@@ -454,22 +445,44 @@ public class RssAtomParser extends DefaultHandler {
                     // First, try to update the feed
                     ContentResolver cr = MainApplication.getContext().getContentResolver();
                     boolean isUpdated = (!entryLinkString.isEmpty() || guidString != null)
-                            && cr.update(mFeedEntriesUri, values, existenceStringBuilder.toString(), existenceValues) != 0;
+                            && cr.update(mFeedEntriesUri, entryValues, existenceStringBuilder.toString(), existenceValues) != 0;
 
                     // Insert it only if necessary
                     if (!isUpdated && !updateOnly) {
                         // We put the date only for new entry (no need to change the past, you may already read it)
                         if (mEntryDate != null) {
-                            values.put(EntryColumns.DATE, mEntryDate.getTime());
+                            entryValues.put(EntryColumns.DATE, mEntryDate.getTime());
                         } else {
-                            values.put(EntryColumns.DATE, mNow--); // -1 to keep the good entries order
+                            entryValues.put(EntryColumns.DATE, mNow--); // -1 to keep the good entries order
                         }
 
-                        values.put(EntryColumns.LINK, entryLinkString);
+                        entryValues.put(EntryColumns.LINK, entryLinkString);
 
                         // We cannot update, we need to insert it
                         mInsertedEntriesImages.add(imagesUrls);
-                        mInserts.add(ContentProviderOperation.newInsert(mFeedEntriesUri).withValues(values).build());
+                        Uri insertedEntryRowURI = cr.insert(mFeedEntriesUri, entryValues); // <-- insert NOW (to be able to retrieve entry id)
+                        String insertedEntryId = insertedEntryRowURI.getLastPathSegment();
+                        mInsertedEntriesId.add(insertedEntryId);
+
+                        // Insert categories
+                        if (mEntryCategories.size() > 0) {
+                            ContentValues[] categoriesValues = new ContentValues[mEntryCategories.size()];
+
+                            for (int i = 0; i < mEntryCategories.size() ; i++) {
+                                ContentValues categoryValues = new ContentValues();
+                                categoryValues.put(CategoryColumns.CATEGORY, mEntryCategories.get(i));
+                                categoryValues.put(CategoryColumns.ENTRY_ID, insertedEntryId);
+                                categoriesValues[i] = categoryValues;
+                            }
+
+                            Uri mEntryCategoriesUri  = CategoryColumns.CATEGORIES_FOR_ENTRY_CONTENT_URI(insertedEntryId);
+                            int insertedCategoryRows = cr.bulkInsert(mEntryCategoriesUri,categoriesValues);
+                            assert insertedCategoryRows == mEntryCategories.size();
+
+                            mEntryCategories = new ArrayList<String>();
+                        }
+
+
 
                         mNewCount++;
                     }
@@ -626,25 +639,15 @@ public class RssAtomParser extends DefaultHandler {
         ContentResolver cr = MainApplication.getContext().getContentResolver();
 
         try {
-            if (!mInserts.isEmpty()) {
-                ContentProviderResult[] results = cr.applyBatch(FeedData.AUTHORITY, mInserts);
+            if (!mInsertedEntriesId.isEmpty()) {
 
                 if (mFetchImages) {
-                    for (int i = 0; i < results.length; ++i) {
+                    for (int i = 0; i < mInsertedEntriesId.size(); ++i) {
                         ArrayList<String> images = mInsertedEntriesImages.get(i);
                         if (images != null) {
-                            FetcherService.addImagesToDownload(results[i].uri.getLastPathSegment(), images);
+                            FetcherService.addImagesToDownload(mInsertedEntriesId.get(i), images);
                         }
                     }
-                }
-
-                if (mRetrieveFullText) {
-                    long[] entriesId = new long[results.length];
-                    for (int i = 0; i < results.length; i++) {
-                        entriesId[i] = Long.valueOf(results[i].uri.getLastPathSegment());
-                    }
-
-                    FetcherService.addEntriesToMobilize(entriesId);
                 }
             }
         } catch (Exception e) {
