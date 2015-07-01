@@ -52,6 +52,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 
+import pm.chatel.senbazuru.BuildConfig;
 import pm.chatel.senbazuru.Constants;
 import pm.chatel.senbazuru.MainApplication;
 import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
@@ -477,7 +478,11 @@ public class RssAtomParser extends DefaultHandler {
 
                             Uri mEntryCategoriesUri  = CategoryColumns.CATEGORIES_FOR_ENTRY_CONTENT_URI(insertedEntryId);
                             int insertedCategoryRows = cr.bulkInsert(mEntryCategoriesUri,categoriesValues);
-                            assert insertedCategoryRows == mEntryCategories.size();
+
+                            //Check if all categories have been inserted in the database
+                            if (BuildConfig.DEBUG && insertedCategoryRows != mEntryCategories.size()) {
+                                throw new AssertionError();
+                            }
 
                             mEntryCategories = new ArrayList<String>();
                         }
