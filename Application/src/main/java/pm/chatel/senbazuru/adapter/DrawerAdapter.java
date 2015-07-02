@@ -75,7 +75,7 @@ public class DrawerAdapter extends BaseAdapter {
 
     private final Context mContext;
     private Cursor mFeedsCursor;
-    private int mAllUnreadNumber, mFavoritesNumber;
+    private int mAllUnreadNumber, mFavoritesNumber, mEasyNumber, mIntermediateNumber, mAdvancedNumber;
 
     public DrawerAdapter(Context context, Cursor feedCursor) {
         mContext = context;
@@ -117,17 +117,14 @@ public class DrawerAdapter extends BaseAdapter {
         convertView.setPadding(0, 0, 0, 0);
         holder.separator.setVisibility(View.GONE);
 
-        if (position == ALL_DRAWER_POSITION || position == STARED_DRAWER_POSITION) {
-            holder.titleTxt.setText(position == ALL_DRAWER_POSITION ? R.string.all : R.string.favorites);
-            holder.iconView.setImageResource(position == ALL_DRAWER_POSITION ? R.drawable.senbazuru_ui_icon : R.drawable.rating_important);
+        if (position == ALL_DRAWER_POSITION) {
 
-            int unread = position == ALL_DRAWER_POSITION ? mAllUnreadNumber : mFavoritesNumber;
+            holder.titleTxt.setText(R.string.all);
+            holder.iconView.setImageResource(R.drawable.senbazuru_ui_icon);
+            int unread = mAllUnreadNumber;
             if (unread != 0) {
                 holder.unreadTxt.setText(String.valueOf(unread));
             }
-        }
-
-        if (position == ALL_DRAWER_POSITION) {
 
             //Attention: position du curseur (0 = premier feed) different de position dans la liste
             if (mFeedsCursor != null && mFeedsCursor.moveToPosition(0)) {
@@ -158,15 +155,35 @@ public class DrawerAdapter extends BaseAdapter {
                     }
                 }
             }
-        } else if (position == EASY_DRAWER_POSITION) {
+        } else if (position == STARED_DRAWER_POSITION) {
+            holder.titleTxt.setText(R.string.favorites);
+            holder.iconView.setImageResource(R.drawable.rating_important);
+            int unread =  mFavoritesNumber;
+            if (unread != 0) {
+                holder.unreadTxt.setText(String.valueOf(unread));
+            }
+        }
+        else if (position == EASY_DRAWER_POSITION) {
             holder.titleTxt.setText(R.string.easy);
             holder.iconView.setImageResource(R.drawable.cool_64pt);
+            int unread = mEasyNumber;
+            if (unread != 0) {
+                holder.unreadTxt.setText(String.valueOf(unread));
+            }
         } else if (position == INTERMEDIATE_DRAWER_POSITION) {
             holder.titleTxt.setText(R.string.intermediate);
             holder.iconView.setImageResource(R.drawable.happy_64pt);
+            int unread = mIntermediateNumber;
+            if (unread != 0) {
+                holder.unreadTxt.setText(String.valueOf(unread));
+            }
         }else if (position == ADVANCED_DRAWER_POSITION) {
             holder.titleTxt.setText(R.string.advanced);
             holder.iconView.setImageResource(R.drawable.evil_64pt);
+            int unread = mAdvancedNumber;
+            if (unread != 0) {
+                holder.unreadTxt.setText(String.valueOf(unread));
+            }
         }
         else if (position == SEARCH_DRAWER_POSITION) {
             holder.titleTxt.setText(R.string.find);
@@ -267,14 +284,17 @@ public class DrawerAdapter extends BaseAdapter {
     }
 
     private void updateNumbers() {
-        mAllUnreadNumber = mFavoritesNumber = 0;
+        mAllUnreadNumber = mFavoritesNumber = mEasyNumber = mIntermediateNumber = mAdvancedNumber = 0;
 
         // Gets the numbers of entries (should be in a thread, but it's way easier like this and it shouldn't be so slow)
-        Cursor numbers = mContext.getContentResolver().query(EntryColumns.CONTENT_URI, new String[]{FeedData.ALL_UNREAD_NUMBER, FeedData.FAVORITES_NUMBER}, null, null, null);
+        Cursor numbers = mContext.getContentResolver().query(EntryColumns.CONTENT_URI, new String[]{FeedData.ALL_UNREAD_NUMBER, FeedData.FAVORITES_NUMBER, FeedData.EASY_NUMBER, FeedData.INTERMEDIATE_NUMBER, FeedData.ADVANCED_NUMBER}, null, null, null);
         if (numbers != null) {
             if (numbers.moveToFirst()) {
                 mAllUnreadNumber = numbers.getInt(0);
                 mFavoritesNumber = numbers.getInt(1);
+                mEasyNumber = numbers.getInt(2);
+                mIntermediateNumber = numbers.getInt(3);
+                mAdvancedNumber = numbers.getInt(4);
             }
             numbers.close();
         }

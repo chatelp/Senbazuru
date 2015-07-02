@@ -61,12 +61,17 @@ public class FeedData {
     public static final String ENTRIES_TABLE_WITH_FEED_INFO = EntryColumns.TABLE_NAME + " JOIN (SELECT " + FeedColumns._ID + " AS joined_feed_id, " + FeedColumns.NAME + ", " + FeedColumns.URL + ", " +
             FeedColumns.ICON + ", " + FeedColumns.GROUP_ID + " FROM " + FeedColumns.TABLE_NAME + ") AS f ON (" + EntryColumns.TABLE_NAME + '.' + EntryColumns.FEED_ID + " = f.joined_feed_id)";
 
-    public static final String CATEGORIES_TABLE_WITH_ENTRY_INFO = CategoryColumns.TABLE_NAME + " JOIN " + EntryColumns.TABLE_NAME + " ON " + CategoryColumns.TABLE_NAME + '.' + CategoryColumns.ENTRY_ID
-            + " = " + EntryColumns.TABLE_NAME + '.' + EntryColumns._ID;
-
+    public static final String CATEGORIES_TABLE_WITH_ENTRY_INFO = "(SELECT " + CategoryColumns._ID + " AS category_id, " + CategoryColumns.ENTRY_ID + ", " + CategoryColumns.CATEGORY + " FROM " + CategoryColumns.TABLE_NAME +
+            ") AS f JOIN " + EntryColumns.TABLE_NAME + " ON f." + CategoryColumns.ENTRY_ID + " = " + EntryColumns.TABLE_NAME + '.' + EntryColumns._ID;
 
     public static final String ALL_UNREAD_NUMBER = "(SELECT " + Constants.DB_COUNT + " FROM " + EntryColumns.TABLE_NAME + " WHERE " + EntryColumns.IS_READ + " IS NULL)";
     public static final String FAVORITES_NUMBER = "(SELECT " + Constants.DB_COUNT + " FROM " + EntryColumns.TABLE_NAME + " WHERE " + EntryColumns.IS_FAVORITE + Constants.DB_IS_TRUE + ')';
+
+    public static final String EASY_NUMBER = "(SELECT "+ Constants.DB_COUNT + " FROM " + CategoryColumns.TABLE_NAME + " WHERE " + CategoryColumns.CATEGORY + "= \"Difficulté: ★\")";
+    public static final String INTERMEDIATE_NUMBER = "(SELECT "+ Constants.DB_COUNT + " FROM " + CategoryColumns.TABLE_NAME + " WHERE " + CategoryColumns.CATEGORY + "= \"Difficulté: ★★\")";
+    public static final String ADVANCED_NUMBER = "(SELECT "+ Constants.DB_COUNT + " FROM " + CategoryColumns.TABLE_NAME + " WHERE " + CategoryColumns.CATEGORY + "= \"Difficulté: ★★★\")";
+
+
     static final String TYPE_PRIMARY_KEY = "INTEGER PRIMARY KEY AUTOINCREMENT";
     static final String TYPE_EXTERNAL_ID = "INTEGER(7)";
     static final String TYPE_TEXT = "TEXT";

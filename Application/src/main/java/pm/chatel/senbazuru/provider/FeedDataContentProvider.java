@@ -206,6 +206,7 @@ public class FeedDataContentProvider extends ContentProvider {
             case URI_ENTRY_FOR_FEED:
             case URI_ENTRY_FOR_GROUP:
             case URI_SEARCH_ENTRY:
+            case URI_ENTRY_FOR_CATEGORY:
                 return "vnd.android.cursor.item/vnd.senbazuru.entry";
             case URI_TASKS:
                 return "vnd.android.cursor.dir/vnd.senbazuru.task";
