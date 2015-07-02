@@ -116,6 +116,9 @@
     <string name="favorites">Starred</string>
     <string name="about">About us</string>
     <string name="find">Find tutorial</string>
+    <string name="easy">Easy tutorials</string>
+    <string name="intermediate">Intermediate tutorials</string>
+    <string name="advanced">Advanced tutorials</string>
     <string name="context_menu_share_starred">Share starred tutorials</string>
     <string name="menu_star">Star</string>
     <string name="menu_unstar">Unstar</string>

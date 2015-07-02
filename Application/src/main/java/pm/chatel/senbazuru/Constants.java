@@ -75,8 +75,5 @@ public final class Constants {
 
     public static final int UPDATE_THROTTLE_DELAY = 500;
 
-    public static final String FETCH_PICTURE_MODE_WIFI_ONLY_PRELOAD = "WIFI_ONLY_PRELOAD";
-    public static final String FETCH_PICTURE_MODE_ALWAYS_PRELOAD = "ALWAYS_PRELOAD";
-
     public static final MatrixCursor EMPTY_CURSOR = new MatrixCursor(new String[]{BaseColumns._ID});
 }

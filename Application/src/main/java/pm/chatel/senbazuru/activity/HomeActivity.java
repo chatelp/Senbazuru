@@ -65,9 +65,6 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
             ") > 0)";
 
     private static final int LOADER_ID = 0;
-    private static final int ABOUT_DRAWER_POSITION = -1;
-    private static final int SEARCH_DRAWER_POSITION = 2;
-
 
     private EntriesListFragment mEntriesFragment;
     private DrawerLayout mDrawerLayout;
@@ -199,7 +196,7 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
     }
 
     public void onClickSearch(View view) {
-        selectDrawerItem(SEARCH_DRAWER_POSITION);
+        selectDrawerItem(DrawerAdapter.SEARCH_DRAWER_POSITION);
         if (mDrawerLayout != null) {
             mDrawerLayout.postDelayed(new Runnable() {
                 @Override
@@ -275,23 +272,37 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
         boolean showFeedInfo = true;
 
         switch (position) {
-            case ABOUT_DRAWER_POSITION:
+            case DrawerAdapter.ABOUT_DRAWER_POSITION:
                 newUri = EntryColumns.SEARCH_URI(mEntriesFragment.getCurrentSearch());
                 PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, true);
                 break;
-            case SEARCH_DRAWER_POSITION:
-                newUri = EntryColumns.SEARCH_URI(mEntriesFragment.getCurrentSearch());
-                PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, true);
-                break;
-            case 0:
+
+            case DrawerAdapter.ALL_DRAWER_POSITION:
                 newUri = EntryColumns.ALL_ENTRIES_CONTENT_URI;
                 PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, false);
                 break;
-            case 1:
+            case DrawerAdapter.STARED_DRAWER_POSITION:
                 newUri = EntryColumns.FAVORITES_CONTENT_URI;
                 PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, false);
                 break;
 
+            case DrawerAdapter.EASY_DRAWER_POSITION:
+                newUri = EntryColumns.ENTRIES_FOR_CATEGORY_CONTENT_URI("Difficulté: ★");
+                PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, false);
+                break;
+            case DrawerAdapter.INTERMEDIATE_DRAWER_POSITION:
+                newUri = EntryColumns.ENTRIES_FOR_CATEGORY_CONTENT_URI("Difficulté: ★★");
+                PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, false);
+                break;
+            case DrawerAdapter.ADVANCED_DRAWER_POSITION:
+                newUri = EntryColumns.ENTRIES_FOR_CATEGORY_CONTENT_URI("Difficulté: ★★★");
+                PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, false);
+                break;
+
+            case DrawerAdapter.SEARCH_DRAWER_POSITION:
+                newUri = EntryColumns.SEARCH_URI(mEntriesFragment.getCurrentSearch());
+                PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, true);
+                break;
             default:
                 newUri = EntryColumns.ALL_ENTRIES_CONTENT_URI;
                 PrefUtils.putBoolean(PrefUtils.SHOW_SEARCH, false);
@@ -318,11 +329,11 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
 
         // Set title & icon
         switch (mCurrentDrawerPos) {
-            case ABOUT_DRAWER_POSITION:
+            case DrawerAdapter.ABOUT_DRAWER_POSITION:
                 getSupportActionBar().setTitle(android.R.string.search_go);
                 getSupportActionBar().setIcon(R.drawable.action_search);
                 break;
-            case SEARCH_DRAWER_POSITION:
+            case DrawerAdapter.SEARCH_DRAWER_POSITION:
                 getSupportActionBar().setTitle(android.R.string.search_go);
                 getSupportActionBar().setIcon(R.drawable.action_search);
                 break;

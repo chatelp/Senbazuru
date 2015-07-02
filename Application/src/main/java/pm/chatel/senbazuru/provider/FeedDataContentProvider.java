@@ -95,7 +95,10 @@ public class FeedDataContentProvider extends ContentProvider {
     public static final int URI_CATEGORIES = 23;
     public static final int URI_CATEGORY = 24;
     public static final int URI_CATEGORIES_FOR_ENTRY = 25;
-    public static final int URI_CATEGORY_FOR_ENTRY = 26;
+    public static final int URI_ENTRIES_FOR_CATEGORY = 26;
+
+    public static final int URI_ENTRY_FOR_CATEGORY = 27;
+    public static final int URI_CATEGORY_FOR_ENTRY = 28;
 
     public static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -126,6 +129,9 @@ public class FeedDataContentProvider extends ContentProvider {
         URI_MATCHER.addURI(AUTHORITY, "categories/#", URI_CATEGORY);
         URI_MATCHER.addURI(AUTHORITY, "entries/#/categories/#", URI_CATEGORY_FOR_ENTRY);
         URI_MATCHER.addURI(AUTHORITY, "entries/#/categories", URI_CATEGORIES_FOR_ENTRY);
+
+        URI_MATCHER.addURI(AUTHORITY, "categories/*/entries/#", URI_ENTRY_FOR_CATEGORY);
+        URI_MATCHER.addURI(AUTHORITY, "categories/*/entries", URI_ENTRIES_FOR_CATEGORY);
     }
 
     private final String[] MAX_PRIORITY = new String[]{"MAX(" + FeedColumns.PRIORITY + ")"};
@@ -300,6 +306,20 @@ public class FeedDataContentProvider extends ContentProvider {
                 queryBuilder.setTables(ENTRIES_TABLE_WITH_FEED_INFO);
                 break;
             }
+
+            case URI_CATEGORY_FOR_ENTRY:
+            case URI_CATEGORIES_FOR_ENTRY: {
+                System.out.print("test");
+                break;
+            }
+
+            case URI_ENTRY_FOR_CATEGORY:
+            case URI_ENTRIES_FOR_CATEGORY: {
+                queryBuilder.setTables(CATEGORIES_TABLE_WITH_ENTRY_INFO);
+                queryBuilder.appendWhere(new StringBuilder(CategoryColumns.CATEGORY).append('=').append('\"').append(uri.getPathSegments().get(1)).append('\"'));
+                break;
+            }
+
             case URI_SEARCH: {
                 queryBuilder.setTables(ENTRIES_TABLE_WITH_FEED_INFO);
                 queryBuilder.appendWhere(getSearchWhereClause(uri.getPathSegments().get(2)));
@@ -491,6 +511,7 @@ public class FeedDataContentProvider extends ContentProvider {
                 where.append(FilterColumns.FEED_ID).append('=').append(uri.getPathSegments().get(1));
                 break;
             }
+            case URI_ENTRY_FOR_CATEGORY:
             case URI_ENTRY_FOR_FEED:
             case URI_ENTRY_FOR_GROUP:
             case URI_SEARCH_ENTRY: {

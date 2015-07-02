@@ -100,7 +100,6 @@ public class HtmlUtils {
         return images;
     }
 
-    //TODO Supprimer
     public static String replaceImageURLs(String content, final long entryId) {
 
         if (!TextUtils.isEmpty(content)) {

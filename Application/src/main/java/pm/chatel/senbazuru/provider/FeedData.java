@@ -60,6 +60,11 @@ public class FeedData {
             " AS group_priority FROM " + FeedColumns.TABLE_NAME + ") AS f ON (" + FeedColumns.TABLE_NAME + '.' + FeedColumns.GROUP_ID + " = f.joined_feed_id)";
     public static final String ENTRIES_TABLE_WITH_FEED_INFO = EntryColumns.TABLE_NAME + " JOIN (SELECT " + FeedColumns._ID + " AS joined_feed_id, " + FeedColumns.NAME + ", " + FeedColumns.URL + ", " +
             FeedColumns.ICON + ", " + FeedColumns.GROUP_ID + " FROM " + FeedColumns.TABLE_NAME + ") AS f ON (" + EntryColumns.TABLE_NAME + '.' + EntryColumns.FEED_ID + " = f.joined_feed_id)";
+
+    public static final String CATEGORIES_TABLE_WITH_ENTRY_INFO = CategoryColumns.TABLE_NAME + " JOIN " + EntryColumns.TABLE_NAME + " ON " + CategoryColumns.TABLE_NAME + '.' + CategoryColumns.ENTRY_ID
+            + " = " + EntryColumns.TABLE_NAME + '.' + EntryColumns._ID;
+
+
     public static final String ALL_UNREAD_NUMBER = "(SELECT " + Constants.DB_COUNT + " FROM " + EntryColumns.TABLE_NAME + " WHERE " + EntryColumns.IS_READ + " IS NULL)";
     public static final String FAVORITES_NUMBER = "(SELECT " + Constants.DB_COUNT + " FROM " + EntryColumns.TABLE_NAME + " WHERE " + EntryColumns.IS_FAVORITE + Constants.DB_IS_TRUE + ')';
     static final String TYPE_PRIMARY_KEY = "INTEGER PRIMARY KEY AUTOINCREMENT";
@@ -196,6 +201,10 @@ public class FeedData {
             return Uri.parse(CONTENT_AUTHORITY + "/feeds/" + feedId + "/entries");
         }
 
+        public static Uri ENTRIES_FOR_CATEGORY_CONTENT_URI(String category) {
+            return Uri.parse(CONTENT_AUTHORITY + "/categories/" + category + "/entries");
+        }
+
         public static Uri ENTRIES_FOR_GROUP_CONTENT_URI(String groupId) {
             return Uri.parse(CONTENT_AUTHORITY + "/groups/" + groupId + "/entries");
         }
@@ -261,17 +270,6 @@ public class FeedData {
         public static Uri CATEGORIES_FOR_ENTRY_CONTENT_URI(long entryId) {
             return Uri.parse(CONTENT_AUTHORITY + "/entries/" + entryId + "/categories");
         }
-
-
-        //maybe ?!
-        public static Uri CATEGORIES_FOR_FEED_CONTENT_URI_AND_ENTRY_CONTENT_URI(String feedId, String entryId) {
-            return Uri.parse(CONTENT_AUTHORITY + "/feeds/" + feedId + "/entries/" + entryId + "/categories");
-        }
-
-        public static Uri CATEGORIES_FOR_FEED_CONTENT_URI_AND_ENTRY_CONTENT_URI(long feedId, long entryId) {
-            return Uri.parse(CONTENT_AUTHORITY + "/feeds/" + feedId + "/entries/" + entryId + "/categories");
-        }
-
     }
 
     public static class TaskColumns implements BaseColumns {

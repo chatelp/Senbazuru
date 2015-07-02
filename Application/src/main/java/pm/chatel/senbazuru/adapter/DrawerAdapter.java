@@ -51,6 +51,15 @@ public class DrawerAdapter extends BaseAdapter {
     private static final int POS_ERROR = 6;
     private static final int POS_UNREAD = 7;
 
+    public static final int ABOUT_DRAWER_POSITION = -1;
+    public static final int ALL_DRAWER_POSITION = 0;
+    public static final int STARED_DRAWER_POSITION = 1;
+    public static final int EASY_DRAWER_POSITION = 2;
+    public static final int INTERMEDIATE_DRAWER_POSITION = 3;
+    public static final int ADVANCED_DRAWER_POSITION = 4;
+    public static final int SEARCH_DRAWER_POSITION = 5;
+
+
     private static final int NORMAL_TEXT_COLOR = Color.parseColor("#EEEEEE");
     private static final int GROUP_TEXT_COLOR = Color.parseColor("#BBBBBB");
 
@@ -108,17 +117,17 @@ public class DrawerAdapter extends BaseAdapter {
         convertView.setPadding(0, 0, 0, 0);
         holder.separator.setVisibility(View.GONE);
 
-        if (position == 0 || position == 1) {
-            holder.titleTxt.setText(position == 0 ? R.string.all : R.string.favorites);
-            holder.iconView.setImageResource(position == 0 ? R.drawable.senbazuru_ui_icon : R.drawable.rating_important);
+        if (position == ALL_DRAWER_POSITION || position == STARED_DRAWER_POSITION) {
+            holder.titleTxt.setText(position == ALL_DRAWER_POSITION ? R.string.all : R.string.favorites);
+            holder.iconView.setImageResource(position == ALL_DRAWER_POSITION ? R.drawable.senbazuru_ui_icon : R.drawable.rating_important);
 
-            int unread = position == 0 ? mAllUnreadNumber : mFavoritesNumber;
+            int unread = position == ALL_DRAWER_POSITION ? mAllUnreadNumber : mFavoritesNumber;
             if (unread != 0) {
                 holder.unreadTxt.setText(String.valueOf(unread));
             }
         }
 
-        if (position == 0) {
+        if (position == ALL_DRAWER_POSITION) {
 
             //Attention: position du curseur (0 = premier feed) different de position dans la liste
             if (mFeedsCursor != null && mFeedsCursor.moveToPosition(0)) {
@@ -149,7 +158,17 @@ public class DrawerAdapter extends BaseAdapter {
                     }
                 }
             }
-        } else if (position == 2) {
+        } else if (position == EASY_DRAWER_POSITION) {
+            holder.titleTxt.setText(R.string.easy);
+            holder.iconView.setImageResource(R.drawable.cool_64pt);
+        } else if (position == INTERMEDIATE_DRAWER_POSITION) {
+            holder.titleTxt.setText(R.string.intermediate);
+            holder.iconView.setImageResource(R.drawable.happy_64pt);
+        }else if (position == ADVANCED_DRAWER_POSITION) {
+            holder.titleTxt.setText(R.string.advanced);
+            holder.iconView.setImageResource(R.drawable.evil_64pt);
+        }
+        else if (position == SEARCH_DRAWER_POSITION) {
             holder.titleTxt.setText(R.string.find);
             holder.iconView.setImageResource(R.drawable.action_search);
         }
@@ -208,8 +227,8 @@ public class DrawerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        //Nombre d'entrées dans le drawer
-        return 3;
+        //Number of entries in the drawer
+        return 6;
     }
 
     @Override

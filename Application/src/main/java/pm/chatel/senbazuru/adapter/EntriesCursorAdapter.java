@@ -103,7 +103,8 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
         holder.titleTextView.setText(titleText);
 
         final long feedId = cursor.getLong(mFeedIdPos);
-        String feedName = cursor.getString(mFeedNamePos);
+        //String feedName = cursor.getString(mFeedNamePos);
+        String feedName = null;
 
         String mainImgUrl = cursor.getString(mMainImgPos);
         mainImgUrl = TextUtils.isEmpty(mainImgUrl) ? null : NetworkUtils.getDownloadedOrDistantImageUrl(cursor.getLong(mIdPos), mainImgUrl);

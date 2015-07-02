@@ -113,6 +113,9 @@
     <string name="favorites">Favoris</string>
     <string name="about">A propos</string>
     <string name="find">Rechercher un tutoriel</string>
+    <string name="easy">Tutoriels faciles</string>
+    <string name="intermediate">Tutoriels intermédiaires</string>
+    <string name="advanced">Tutoriels avancés</string>
     <string name="context_menu_share_starred">Partager les favoris</string>
     <string name="menu_star">Mettre en favoris</string>
     <string name="menu_unstar">Enlever des favoris</string>
