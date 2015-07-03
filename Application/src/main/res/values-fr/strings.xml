@@ -41,6 +41,9 @@
     <string name="drawer_open">Ouvrir menu de navigation</string>
     <string name="drawer_close">Fermer menu de navigation</string>
     <string name="back_again_to_quit">Appuyez de nouveau sur retour pour quitter</string>
+    <string name="mark_all_as_done">Marquer tous les tutoriels comme effectués ?</string>
+    <string name="mark_all_as_done_yes">Marquer effectués</string>
+    <string name="mark_all_as_done_no">Annuler</string>
 
     <!-- FEEDS -->
     <string name="feeds">Flux</string>

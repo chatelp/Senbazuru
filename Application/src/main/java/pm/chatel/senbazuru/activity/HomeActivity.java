@@ -19,6 +19,7 @@
 
 package pm.chatel.senbazuru.activity;
 
+import android.app.DialogFragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -42,6 +43,7 @@ import android.widget.Toast;
 import pm.chatel.senbazuru.Constants;
 import pm.chatel.senbazuru.R;
 import pm.chatel.senbazuru.adapter.DrawerAdapter;
+import pm.chatel.senbazuru.fragment.AlertFragment;
 import pm.chatel.senbazuru.fragment.EntriesListFragment;
 import pm.chatel.senbazuru.provider.FeedData;
 import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
@@ -51,7 +53,7 @@ import pm.chatel.senbazuru.service.FetcherService;
 import pm.chatel.senbazuru.service.RefreshService;
 import pm.chatel.senbazuru.utils.PrefUtils;
 
-public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, AlertFragment.AlertDialogListener {
 
     private static final String STATE_CURRENT_DRAWER_POS = "STATE_CURRENT_DRAWER_POS";
 
@@ -333,18 +335,31 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
                 getSupportActionBar().setTitle(android.R.string.search_go);
                 getSupportActionBar().setIcon(R.drawable.action_search);
                 break;
+            case DrawerAdapter.ALL_DRAWER_POSITION:
+                getSupportActionBar().setTitle(R.string.all);
+                getSupportActionBar().setIcon(R.drawable.senbazuru_ui_icon_64pt);
+                break;
+            case DrawerAdapter.STARED_DRAWER_POSITION:
+                getSupportActionBar().setTitle(R.string.favorites);
+                getSupportActionBar().setIcon(R.drawable.rating_important);
+                break;
+            case DrawerAdapter.EASY_DRAWER_POSITION:
+                getSupportActionBar().setTitle(R.string.easy);
+                getSupportActionBar().setIcon(R.drawable.cool_64pt);
+                break;
+            case DrawerAdapter.INTERMEDIATE_DRAWER_POSITION:
+                getSupportActionBar().setTitle(R.string.intermediate);
+                getSupportActionBar().setIcon(R.drawable.happy_64pt);
+                break;
+            case DrawerAdapter.ADVANCED_DRAWER_POSITION:
+                getSupportActionBar().setTitle(R.string.advanced);
+                getSupportActionBar().setIcon(R.drawable.evil_64pt);
+                break;
             case DrawerAdapter.SEARCH_DRAWER_POSITION:
                 getSupportActionBar().setTitle(android.R.string.search_go);
                 getSupportActionBar().setIcon(R.drawable.action_search);
                 break;
-            case 0:
-                getSupportActionBar().setTitle(R.string.all);
-                getSupportActionBar().setIcon(R.drawable.senbazuru_ui_icon);
-                break;
-            case 1:
-                getSupportActionBar().setTitle(R.string.favorites);
-                getSupportActionBar().setIcon(R.drawable.rating_important);
-                break;
+
             default:
                 getSupportActionBar().setTitle(mTitle);
                 if (mIcon != null) {
@@ -357,5 +372,15 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
 
         // Put the good menu
         invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        mEntriesFragment.markAllEntriesAsRead();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        //do nothing
     }
 }

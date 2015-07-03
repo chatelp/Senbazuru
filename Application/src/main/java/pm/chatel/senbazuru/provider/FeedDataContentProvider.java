@@ -198,6 +198,7 @@ public class FeedDataContentProvider extends ContentProvider {
             case URI_ENTRIES:
             case URI_ENTRIES_FOR_FEED:
             case URI_ENTRIES_FOR_GROUP:
+            case URI_ENTRIES_FOR_CATEGORY:
             case URI_SEARCH:
                 return "vnd.android.cursor.dir/vnd.senbazuru.entry";
             case URI_FAVORITES_ENTRY:
@@ -528,6 +529,13 @@ public class FeedDataContentProvider extends ContentProvider {
             case URI_ENTRIES_FOR_GROUP: {
                 table = EntryColumns.TABLE_NAME;
                 where.append(EntryColumns.FEED_ID).append(" IN (SELECT ").append(FeedColumns._ID).append(" FROM ").append(FeedColumns.TABLE_NAME).append(" WHERE ").append(FeedColumns.GROUP_ID).append('=').append(uri.getPathSegments().get(1)).append(')');
+                break;
+            }
+            case URI_ENTRIES_FOR_CATEGORY: {
+                table = EntryColumns.TABLE_NAME;
+                String SELECT_ENTRIES_WITH_CATEGORY = EntryColumns._ID + " IN (SELECT " + CategoryColumns.ENTRY_ID + " FROM " + CategoryColumns.TABLE_NAME + " WHERE " + CategoryColumns.CATEGORY + " = \""
+                        + uri.getPathSegments().get(1) + "\")";
+                where.append(SELECT_ENTRIES_WITH_CATEGORY);
                 break;
             }
             case URI_ALL_ENTRIES:

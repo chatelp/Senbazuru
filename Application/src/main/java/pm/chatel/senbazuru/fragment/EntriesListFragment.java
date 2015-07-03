@@ -19,6 +19,8 @@
 
 package pm.chatel.senbazuru.fragment;
 
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.Context;
@@ -256,6 +258,8 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
 
         disableSwipe();
 
+
+
         return rootView;
     }
 
@@ -330,12 +334,9 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
             }
             case R.id.menu_all_read: {
                 if (mEntriesCursorAdapter != null) {
-                    mEntriesCursorAdapter.markAllAsRead(mListDisplayDate);
 
-                    // If we are on "all items" uri, we can remove the notification here
-                    if (mUri != null && EntryColumns.CONTENT_URI.equals(mUri) && Constants.NOTIF_MGR != null) {
-                        Constants.NOTIF_MGR.cancel(0);
-                    }
+                    DialogFragment dialog = new AlertFragment();
+                    dialog.show(getFragmentManager(), "confirmation");
                 }
                 return true;
             }
@@ -412,6 +413,15 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
             }
         }
     }
+    public void markAllEntriesAsRead() {
+        mEntriesCursorAdapter.markAllAsRead(mListDisplayDate);
+
+        // If we are on "all items" uri, we can remove the notification here
+        if (mUri != null && EntryColumns.CONTENT_URI.equals(mUri) && Constants.NOTIF_MGR != null) {
+            Constants.NOTIF_MGR.cancel(0);
+        }
+    }
+
 
     private class SwipeGestureListener extends SimpleOnGestureListener implements OnTouchListener {
         static final int SWIPE_MIN_DISTANCE = 120;

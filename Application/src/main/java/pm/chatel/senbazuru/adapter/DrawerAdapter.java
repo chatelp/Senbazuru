@@ -21,7 +21,6 @@ package pm.chatel.senbazuru.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +34,6 @@ import pm.chatel.senbazuru.R;
 import pm.chatel.senbazuru.provider.FeedData;
 import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
 import pm.chatel.senbazuru.utils.StringUtils;
-import pm.chatel.senbazuru.utils.UiUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -75,7 +73,7 @@ public class DrawerAdapter extends BaseAdapter {
 
     private final Context mContext;
     private Cursor mFeedsCursor;
-    private int mAllUnreadNumber, mFavoritesNumber, mEasyNumber, mIntermediateNumber, mAdvancedNumber;
+    private int mAllNumber, mFavoritesNumber, mEasyNumber, mIntermediateNumber, mAdvancedNumber;
 
     public DrawerAdapter(Context context, Cursor feedCursor) {
         mContext = context;
@@ -100,7 +98,7 @@ public class DrawerAdapter extends BaseAdapter {
             holder.iconView = (ImageView) convertView.findViewById(android.R.id.icon);
             holder.titleTxt = (TextView) convertView.findViewById(android.R.id.text1);
             holder.stateTxt = (TextView) convertView.findViewById(android.R.id.text2);
-            holder.unreadTxt = (TextView) convertView.findViewById(R.id.unread_count);
+            holder.countTxt = (TextView) convertView.findViewById(R.id.count);
             holder.separator = convertView.findViewById(R.id.separator);
             convertView.setTag(R.id.holder, holder);
         }
@@ -113,17 +111,17 @@ public class DrawerAdapter extends BaseAdapter {
         holder.titleTxt.setTextColor(NORMAL_TEXT_COLOR);
         holder.titleTxt.setAllCaps(false);
         holder.stateTxt.setVisibility(View.GONE);
-        holder.unreadTxt.setText("");
+        holder.countTxt.setText("");
         convertView.setPadding(0, 0, 0, 0);
         holder.separator.setVisibility(View.GONE);
 
         if (position == ALL_DRAWER_POSITION) {
 
             holder.titleTxt.setText(R.string.all);
-            holder.iconView.setImageResource(R.drawable.senbazuru_ui_icon);
-            int unread = mAllUnreadNumber;
+            holder.iconView.setImageResource(R.drawable.senbazuru_ui_icon_64pt);
+            int unread = mAllNumber;
             if (unread != 0) {
-                holder.unreadTxt.setText(String.valueOf(unread));
+                holder.countTxt.setText(String.valueOf(unread));
             }
 
             //Attention: position du curseur (0 = premier feed) different de position dans la liste
@@ -160,7 +158,7 @@ public class DrawerAdapter extends BaseAdapter {
             holder.iconView.setImageResource(R.drawable.rating_important);
             int unread =  mFavoritesNumber;
             if (unread != 0) {
-                holder.unreadTxt.setText(String.valueOf(unread));
+                holder.countTxt.setText(String.valueOf(unread));
             }
         }
         else if (position == EASY_DRAWER_POSITION) {
@@ -168,21 +166,21 @@ public class DrawerAdapter extends BaseAdapter {
             holder.iconView.setImageResource(R.drawable.cool_64pt);
             int unread = mEasyNumber;
             if (unread != 0) {
-                holder.unreadTxt.setText(String.valueOf(unread));
+                holder.countTxt.setText(String.valueOf(unread));
             }
         } else if (position == INTERMEDIATE_DRAWER_POSITION) {
             holder.titleTxt.setText(R.string.intermediate);
             holder.iconView.setImageResource(R.drawable.happy_64pt);
             int unread = mIntermediateNumber;
             if (unread != 0) {
-                holder.unreadTxt.setText(String.valueOf(unread));
+                holder.countTxt.setText(String.valueOf(unread));
             }
         }else if (position == ADVANCED_DRAWER_POSITION) {
             holder.titleTxt.setText(R.string.advanced);
             holder.iconView.setImageResource(R.drawable.evil_64pt);
             int unread = mAdvancedNumber;
             if (unread != 0) {
-                holder.unreadTxt.setText(String.valueOf(unread));
+                holder.countTxt.setText(String.valueOf(unread));
             }
         }
         else if (position == SEARCH_DRAWER_POSITION) {
@@ -234,7 +232,7 @@ public class DrawerAdapter extends BaseAdapter {
 
                 int unread = mFeedsCursor.getInt(POS_UNREAD);
                 if (unread != 0) {
-                    holder.unreadTxt.setText(String.valueOf(unread));
+                    holder.countTxt.setText(String.valueOf(unread));
                 }
             }
         }*/
@@ -284,13 +282,13 @@ public class DrawerAdapter extends BaseAdapter {
     }
 
     private void updateNumbers() {
-        mAllUnreadNumber = mFavoritesNumber = mEasyNumber = mIntermediateNumber = mAdvancedNumber = 0;
+        mAllNumber = mFavoritesNumber = mEasyNumber = mIntermediateNumber = mAdvancedNumber = 0;
 
         // Gets the numbers of entries (should be in a thread, but it's way easier like this and it shouldn't be so slow)
-        Cursor numbers = mContext.getContentResolver().query(EntryColumns.CONTENT_URI, new String[]{FeedData.ALL_UNREAD_NUMBER, FeedData.FAVORITES_NUMBER, FeedData.EASY_NUMBER, FeedData.INTERMEDIATE_NUMBER, FeedData.ADVANCED_NUMBER}, null, null, null);
+        Cursor numbers = mContext.getContentResolver().query(EntryColumns.CONTENT_URI, new String[]{FeedData.ALL_NUMBER, FeedData.FAVORITES_NUMBER, FeedData.EASY_NUMBER, FeedData.INTERMEDIATE_NUMBER, FeedData.ADVANCED_NUMBER}, null, null, null);
         if (numbers != null) {
             if (numbers.moveToFirst()) {
-                mAllUnreadNumber = numbers.getInt(0);
+                mAllNumber = numbers.getInt(0);
                 mFavoritesNumber = numbers.getInt(1);
                 mEasyNumber = numbers.getInt(2);
                 mIntermediateNumber = numbers.getInt(3);
@@ -304,7 +302,7 @@ public class DrawerAdapter extends BaseAdapter {
         public ImageView iconView;
         public TextView titleTxt;
         public TextView stateTxt;
-        public TextView unreadTxt;
+        public TextView countTxt;
         public View separator;
     }
 }

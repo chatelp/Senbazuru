@@ -64,6 +64,7 @@ public class FeedData {
     public static final String CATEGORIES_TABLE_WITH_ENTRY_INFO = "(SELECT " + CategoryColumns._ID + " AS category_id, " + CategoryColumns.ENTRY_ID + ", " + CategoryColumns.CATEGORY + " FROM " + CategoryColumns.TABLE_NAME +
             ") AS f JOIN " + EntryColumns.TABLE_NAME + " ON f." + CategoryColumns.ENTRY_ID + " = " + EntryColumns.TABLE_NAME + '.' + EntryColumns._ID;
 
+    public static final String ALL_NUMBER = "(SELECT " + Constants.DB_COUNT + " FROM " + EntryColumns.TABLE_NAME + ")";
     public static final String ALL_UNREAD_NUMBER = "(SELECT " + Constants.DB_COUNT + " FROM " + EntryColumns.TABLE_NAME + " WHERE " + EntryColumns.IS_READ + " IS NULL)";
     public static final String FAVORITES_NUMBER = "(SELECT " + Constants.DB_COUNT + " FROM " + EntryColumns.TABLE_NAME + " WHERE " + EntryColumns.IS_FAVORITE + Constants.DB_IS_TRUE + ')';
 

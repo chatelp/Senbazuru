@@ -44,6 +44,9 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="back_again_to_quit">Press back once more to exit</string>
+    <string name="mark_all_as_done">Mark all tutorials as done?</string>
+    <string name="mark_all_as_done_yes">Mark as done</string>
+    <string name="mark_all_as_done_no">Cancel</string>
 
     <!-- FEEDS -->
     <string name="feeds">Feeds</string>
