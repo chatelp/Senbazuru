@@ -64,16 +64,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:defaultValue="0"
-            android:entries="@array/settings_keep_times"
-            android:entryValues="@array/settings_keep_time_values"
-            android:inputType="number"
-            android:key="keeptime"
-            android:title="@string/settings_keep_time"/>
-
-        <pm.chatel.senbazuru.view.AutoSummaryListPreference
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:defaultValue="0"
             android:entries="@array/settings_font_sizes"
             android:entryValues="@array/settings_font_size_values"
             android:inputType="number"

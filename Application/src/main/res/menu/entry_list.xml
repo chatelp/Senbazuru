@@ -4,12 +4,6 @@
       xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/menu_refresh"
-        android:icon="@drawable/refresh"
-        android:title="@string/menu_refresh"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction"/>
-    <item
         android:id="@+id/menu_all_read"
         android:icon="@drawable/read_all"
         android:title="@string/menu_all_read"

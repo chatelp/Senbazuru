@@ -303,9 +303,7 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
 
         inflater.inflate(R.menu.entry_list, menu);
 
-        if (EntryColumns.FAVORITES_CONTENT_URI.equals(mUri)) {
-            menu.findItem(R.id.menu_refresh).setVisible(false);
-        } else {
+        if (!EntryColumns.FAVORITES_CONTENT_URI.equals(mUri)) {
             menu.findItem(R.id.menu_share_starred).setVisible(false);
         }
 
@@ -333,10 +331,6 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
                         ));
                     }
                 }
-                return true;
-            }
-            case R.id.menu_refresh: {
-                startRefresh();
                 return true;
             }
             case R.id.menu_all_read: {

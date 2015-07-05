@@ -32,7 +32,7 @@
     <string name="colon">\u00A0:\u00A0</string>
     <string name="menu_settings">Paramètres</string>
     <string name="menu_refresh">Actualiser</string>
-    <string name="menu_all_read">Marquer tout comme lu</string>
+    <string name="menu_all_read">Marquer tout les tutoriels comme effectués</string>
     <string name="flym_feeds">Senbazuru Origami</string>
     <string name="error">Erreur</string>
     <string name="network_error">Pas de connexion disponible</string>
@@ -41,7 +41,7 @@
     <string name="drawer_open">Ouvrir menu de navigation</string>
     <string name="drawer_close">Fermer menu de navigation</string>
     <string name="back_again_to_quit">Appuyez de nouveau sur retour pour quitter</string>
-    <string name="mark_all_as_done">Marquer tous les tutoriels comme effectués ?</string>
+    <string name="mark_all_as_done">Marquer tous ces tutoriels comme effectués ?</string>
     <string name="mark_all_as_done_yes">Marquer effectués</string>
     <string name="mark_all_as_done_no">Annuler</string>
 
@@ -146,11 +146,11 @@
     <string name="transparency">Transparence</string>
 
     <!-- SETTINGS -->
-    <string name="settings_category_refresh">Mise à jour automatique</string>
-    <string name="settings_refresh_enabled">Activer la mise à jour auto</string>
-    <string name="settings_refresh_enabled_description">Active la mise à jour automatique des flux
+    <string name="settings_category_refresh">Paramètres de mise à jour</string>
+    <string name="settings_refresh_enabled">Mise à jour automatique</string>
+    <string name="settings_refresh_enabled_description">Ajoute les nouveaux tutoriels automatiquement
     </string>
-    <string name="settings_refresh_interval">Intervalle de mise à jour</string>
+    <string name="settings_refresh_interval">Intervalle de mise à jour automatique</string>
     <string name="settings_category_notifications">Notifications</string>
     <string name="settings_notifications_enabled">Activer les notifications</string>
     <string name="settings_notifications_enabled_description">Active les notifications en cas de
@@ -164,16 +164,14 @@
     </string>
     <string name="settings_notifications_light">LED</string>
     <string name="settings_notifications_light_description">Active les notifications LED pour les nouveaux tutoriels</string>
-    <string name="settings_category_content_presentation">Présentation des flux</string>
-    <string name="settings_keep_time">Délai de conservation des flux</string>
+    <string name="settings_category_content_presentation">Présentation des tutoriels</string>
     <string name="settings_font_size">Taille du texte</string>
     <string name="settings_display_oldest_first">Ordre des tutoriels</string>
     <string name="settings_display_oldest_first_description">Affiche les plus vieux en premier</string>
     <string name="settings_display_entries_fullscreen">Plein écran auto</string>
     <string name="settings_display_entries_fullscreen_description">Affiche automatiquement les tutoriels en plein écran</string>
-    <string name="settings_refresh_on_open">Mise à jour des flux à l\'ouverture</string>
-    <string name="settings_refresh_on_open_description">Met à jour tous les flux à l\'ouverture de
-        l\'application
+    <string name="settings_refresh_on_open">Mise à jour à l\'ouverture</string>
+    <string name="settings_refresh_on_open_description">Verifie la présence de nouveaux tutoriels à l\'ouverture de l\'application
     </string>
     <string name="settings_refresh_wifi_only">Mise à jour en WiFi uniquement</string>
     <string name="settings_refresh_wifi_only_description">La mise à jour auto ne se fera que si le
