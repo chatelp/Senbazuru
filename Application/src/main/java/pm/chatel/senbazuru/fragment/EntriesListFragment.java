@@ -19,8 +19,8 @@
 
 package pm.chatel.senbazuru.fragment;
 
-import android.app.AlertDialog;
 import android.app.DialogFragment;
+import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.Context;
@@ -32,6 +32,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -63,7 +64,7 @@ import pm.chatel.senbazuru.utils.UiUtils;
 
 import java.util.Date;
 
-public class EntriesListFragment extends SwipeRefreshListFragment {
+public class EntriesListFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String STATE_URI = "STATE_URI";
     private static final String STATE_SHOW_FEED_INFO = "STATE_SHOW_FEED_INFO";
@@ -143,6 +144,7 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
         }
     };
     private Button mRefreshListBtn;
+    private SwipeRefreshLayout mSwipeLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -176,13 +178,25 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
         }
     }
 
+    @Override public void onRefresh() {
+        startRefresh();
+    }
+
     @Override
-    public View inflateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_entry_list, container, true);
 
         if (mEntriesCursorAdapter != null) {
             setListAdapter(mEntriesCursorAdapter);
         }
+
+        mSwipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
 
         mListView = (ListView) rootView.findViewById(android.R.id.list);
         mListView.setFastScrollEnabled(true);
@@ -256,9 +270,6 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
             }
         });
 
-        disableSwipe();
-
-
 
         return rootView;
     }
@@ -276,11 +287,6 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
         outState.putLong(STATE_LIST_DISPLAY_DATE, mListDisplayDate);
 
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onRefresh() {
-        startRefresh();
     }
 
     @Override
@@ -400,9 +406,9 @@ public class EntriesListFragment extends SwipeRefreshListFragment {
 
     private void handleProgress() {
         if (PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
-            showSwipeProgress();
+            mSwipeLayout.setRefreshing(true);
         } else {
-            hideSwipeProgress();
+            mSwipeLayout.setRefreshing(false);
 
             mNewEntriesNumber = 0;
             mListDisplayDate = new Date().getTime();

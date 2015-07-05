@@ -35,12 +35,19 @@
             android:gravity="center"
             android:text="@string/no_entries"/>
 
-        <ListView
-            android:id="@android:id/list"
+        <android.support.v4.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipe_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="fill"
-            android:footerDividersEnabled="false"/>
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill"
+                android:footerDividersEnabled="false"/>
+            </android.support.v4.widget.SwipeRefreshLayout>
 
         <include layout="@layout/find_fab_button"/>
     </FrameLayout>

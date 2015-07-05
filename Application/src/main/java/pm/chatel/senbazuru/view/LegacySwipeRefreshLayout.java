@@ -38,7 +38,7 @@ import android.widget.AbsListView;
 /**
  * The SwipeRefreshLayout should be used whenever the user can refresh the
  * contents of a view via a vertical swipe gesture. The activity that
- * instantiates this view should add an OnRefreshListener to be notified
+ * instantiates this view should add an LegacyOnRefreshListener to be notified
  * whenever the swipe to refresh gesture is completed. The SwipeRefreshLayout
  * will notify the listener each and every time the gesture is completed again;
  * the listener is responsible for correctly determining when to actually
@@ -55,7 +55,7 @@ import android.widget.AbsListView;
  * provide accessibility events; instead, a menu item must be provided to allow
  * refresh of the content wherever this gesture is used.</p>
  */
-public class SwipeRefreshLayout extends ViewGroup {
+public class LegacySwipeRefreshLayout extends ViewGroup {
     private static final long RETURN_TO_ORIGINAL_POSITION_TIMEOUT = 300;
     private static final float ACCELERATE_INTERPOLATION_FACTOR = 1.5f;
     private static final float DECELERATE_INTERPOLATION_FACTOR = 2f;
@@ -70,7 +70,7 @@ public class SwipeRefreshLayout extends ViewGroup {
     private SwipeProgressBar mProgressBar; //the thing that shows progress is going
     private View mTarget; //the content that gets pulled down
     private int mOriginalOffsetTop;
-    private OnRefreshListener mListener;
+    private LegacyOnRefreshListener mListener;
     private MotionEvent mDownEvent;
     private int mFrom;
     private final Animation mAnimateToStartPosition = new Animation() {
@@ -159,7 +159,7 @@ public class SwipeRefreshLayout extends ViewGroup {
      *
      * @param context
      */
-    public SwipeRefreshLayout(Context context) {
+    public LegacySwipeRefreshLayout(Context context) {
         this(context, null);
     }
 
@@ -169,7 +169,7 @@ public class SwipeRefreshLayout extends ViewGroup {
      * @param context
      * @param attrs
      */
-    public SwipeRefreshLayout(Context context, AttributeSet attrs) {
+    public LegacySwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
@@ -216,7 +216,7 @@ public class SwipeRefreshLayout extends ViewGroup {
      * Set the listener to be notified when a refresh is triggered via the swipe
      * gesture.
      */
-    public void setOnRefreshListener(OnRefreshListener listener) {
+    public void setOnRefreshListener(LegacyOnRefreshListener listener) {
         mListener = listener;
     }
 
@@ -434,7 +434,7 @@ public class SwipeRefreshLayout extends ViewGroup {
         removeCallbacks(mCancel);
         mReturnToStartPosition.run();
         setRefreshing(true);
-        mListener.onRefresh();
+        mListener.legacyOnRefresh();
     }
 
     private void updateContentOffsetTop(int targetTop) {
@@ -461,8 +461,8 @@ public class SwipeRefreshLayout extends ViewGroup {
      * Classes that wish to be notified when the swipe gesture correctly
      * triggers a refresh should implement this interface.
      */
-    public interface OnRefreshListener {
-        public void onRefresh();
+    public interface LegacyOnRefreshListener {
+        public void legacyOnRefresh();
     }
 
     /**

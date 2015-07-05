@@ -18,22 +18,36 @@
  */
 package pm.chatel.senbazuru.fragment;
 
-import android.app.Fragment;
+import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
-import pm.chatel.senbazuru.view.SwipeRefreshLayout;
+import pm.chatel.senbazuru.R;
+import pm.chatel.senbazuru.view.LegacySwipeRefreshLayout;
 
-public abstract class SwipeRefreshFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class SwipeRefreshListFragmentLegacy extends ListFragment implements LegacySwipeRefreshLayout.LegacyOnRefreshListener {
 
-    private SwipeRefreshLayout mRefreshLayout;
+    private LegacySwipeRefreshLayout mRefreshLayout;
+    private ListView mListView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRefreshLayout = new SwipeRefreshLayout(inflater.getContext());
+        mRefreshLayout = new LegacySwipeRefreshLayout(inflater.getContext()) {
+            @Override
+            public boolean canChildScrollUp() {
+                return mListView != null && mListView.getFirstVisiblePosition() != 0;
+            }
+        };
         inflateView(inflater, mRefreshLayout, savedInstanceState);
+
+        mListView = (ListView) mRefreshLayout.findViewById(android.R.id.list);
+        if (mListView != null) {
+            // HACK to be able to know when we are on the top of the list (for the swipe refresh)
+            mListView.addHeaderView(new View(mListView.getContext()));
+        }
 
         return mRefreshLayout;
     }
@@ -44,10 +58,11 @@ public abstract class SwipeRefreshFragment extends Fragment implements SwipeRefr
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_blue_dark,
-                android.R.color.holo_blue_bright,
-                android.R.color.holo_blue_dark);
+        mRefreshLayout.setColorScheme(
+                R.color.accent,
+                R.color.accent_dark,
+                R.color.accent,
+                R.color.accent_dark);
         mRefreshLayout.setOnRefreshListener(this);
     }
 

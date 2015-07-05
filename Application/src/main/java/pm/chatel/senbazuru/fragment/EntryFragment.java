@@ -34,8 +34,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -61,12 +59,10 @@ import pm.chatel.senbazuru.activity.EntryActivity;
 import pm.chatel.senbazuru.provider.FeedData;
 import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
 import pm.chatel.senbazuru.provider.FeedData.FeedColumns;
-import pm.chatel.senbazuru.service.FetcherService;
 import pm.chatel.senbazuru.utils.PrefUtils;
-import pm.chatel.senbazuru.utils.UiUtils;
 import pm.chatel.senbazuru.view.EntryView;
 
-public class EntryFragment extends SwipeRefreshFragment implements BaseActivity.OnFullScreenListener, LoaderManager.LoaderCallbacks<Cursor>, EntryView.EntryViewManager {
+public class EntryFragment extends SwipeRefreshFragmentLegacy implements BaseActivity.OnFullScreenListener, LoaderManager.LoaderCallbacks<Cursor>, EntryView.EntryViewManager {
 
     private static final String STATE_BASE_URI = "STATE_BASE_URI";
     private static final String STATE_CURRENT_PAGER_POS = "STATE_CURRENT_PAGER_POS";
@@ -534,7 +530,7 @@ public class EntryFragment extends SwipeRefreshFragment implements BaseActivity.
     }
 
     @Override
-    public void onRefresh() {
+    public void legacyOnRefresh() {
         // Nothing to do
     }
 
