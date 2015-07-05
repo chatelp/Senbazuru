@@ -303,9 +303,6 @@ public class EntryView extends WebView {
     }
 
     public interface EntryViewManager {
-        public void onClickOriginalText();
-
-        public void onClickFullText();
 
         public void onClickEnclosure();
 
@@ -321,16 +318,6 @@ public class EntryView extends WebView {
         @JavascriptInterface
         public String toString() {
             return "injectedJSObject";
-        }
-
-        @JavascriptInterface
-        public void onClickOriginalText() {
-            mEntryViewMgr.onClickOriginalText();
-        }
-
-        @JavascriptInterface
-        public void onClickFullText() {
-            mEntryViewMgr.onClickFullText();
         }
 
         @JavascriptInterface

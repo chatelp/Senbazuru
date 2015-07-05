@@ -161,28 +161,6 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        handleProgress();
-        PrefUtils.registerOnPrefChangeListener(mPrefListener);
-
-        if (mUri != null) {
-            // If the list is empty when we are going back here, try with the last display date
-            if (mNewEntriesNumber != 0 && mOldUnreadEntriesNumber == 0) {
-                mListDisplayDate = new Date().getTime();
-            } else {
-                mAutoRefreshDisplayDate = true; // We will try to update the list after if necessary
-            }
-
-            restartLoaders();
-        }
-    }
-
-    @Override public void onRefresh() {
-        startRefresh();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_entry_list, container, true);
 
@@ -273,6 +251,29 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
 
         return rootView;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        handleProgress();
+        PrefUtils.registerOnPrefChangeListener(mPrefListener);
+
+        if (mUri != null) {
+            // If the list is empty when we are going back here, try with the last display date
+            if (mNewEntriesNumber != 0 && mOldUnreadEntriesNumber == 0) {
+                mListDisplayDate = new Date().getTime();
+            } else {
+                mAutoRefreshDisplayDate = true; // We will try to update the list after if necessary
+            }
+
+            restartLoaders();
+        }
+    }
+
+    @Override public void onRefresh() {
+        startRefresh();
+    }
+
 
     @Override
     public void onStop() {

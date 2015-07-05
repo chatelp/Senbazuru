@@ -19,6 +19,7 @@
 
 package pm.chatel.senbazuru.fragment;
 
+import android.app.Fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -62,7 +63,7 @@ import pm.chatel.senbazuru.provider.FeedData.FeedColumns;
 import pm.chatel.senbazuru.utils.PrefUtils;
 import pm.chatel.senbazuru.view.EntryView;
 
-public class EntryFragment extends SwipeRefreshFragmentLegacy implements BaseActivity.OnFullScreenListener, LoaderManager.LoaderCallbacks<Cursor>, EntryView.EntryViewManager {
+public class EntryFragment extends Fragment implements BaseActivity.OnFullScreenListener, LoaderManager.LoaderCallbacks<Cursor>, EntryView.EntryViewManager {
 
     private static final String STATE_BASE_URI = "STATE_BASE_URI";
     private static final String STATE_CURRENT_PAGER_POS = "STATE_CURRENT_PAGER_POS";
@@ -93,7 +94,7 @@ public class EntryFragment extends SwipeRefreshFragmentLegacy implements BaseAct
     }
 
     @Override
-    public View inflateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_entry, container, true);
 
         mCancelFullscreenBtn = rootView.findViewById(R.id.cancelFullscreenBtn);
@@ -135,8 +136,6 @@ public class EntryFragment extends SwipeRefreshFragmentLegacy implements BaseAct
             public void onPageScrollStateChanged(int i) {
             }
         });
-
-        disableSwipe();
 
         return rootView;
     }
@@ -331,8 +330,6 @@ public class EntryFragment extends SwipeRefreshFragmentLegacy implements BaseAct
             mFavorite = entryCursor.getInt(mIsFavoritePos) == 1;
             activity.invalidateOptionsMenu();
 
-            hideSwipeProgress();
-
             // Mark the article as read
             if (entryCursor.getInt(mIsReadPos) != 1) {
                 final Uri uri = ContentUris.withAppendedId(mBaseUri, mEntriesIds[mCurrentPagerPos]);
@@ -367,55 +364,6 @@ public class EntryFragment extends SwipeRefreshFragmentLegacy implements BaseAct
     private void setImmersiveFullScreen(boolean fullScreen) {
         BaseActivity activity = (BaseActivity) getActivity();
         activity.setImmersiveFullScreen(fullScreen);
-    }
-
-    @Override
-    public void onClickOriginalText() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mPreferFullText = false;
-                mEntryPagerAdapter.displayEntry(mCurrentPagerPos, null, true);
-            }
-        });
-    }
-
-    @Override
-    public void onClickFullText() {
-        final BaseActivity activity = (BaseActivity) getActivity();
-
-        Cursor cursor = mEntryPagerAdapter.getCursor(mCurrentPagerPos);
-        final boolean alreadyMobilized = !cursor.isNull(mMobilizedHtmlPos);
-
-        if (alreadyMobilized) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mPreferFullText = true;
-                    mEntryPagerAdapter.displayEntry(mCurrentPagerPos, null, true);
-                }
-            });
-        } else if (!isRefreshing()) {
-            ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-            final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-            // since we have acquired the networkInfo, we use it for basic checks
-            if (networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showSwipeProgress();
-                    }
-                });
-            } else {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
     }
 
     @Override
@@ -529,10 +477,6 @@ public class EntryFragment extends SwipeRefreshFragmentLegacy implements BaseAct
         mCancelFullscreenBtn.setVisibility(View.GONE);
     }
 
-    @Override
-    public void legacyOnRefresh() {
-        // Nothing to do
-    }
 
     private class EntryPagerAdapter extends PagerAdapter {
 
