@@ -126,16 +126,23 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
+        //Premier lancement: on ajoute le flux RSS à la main
+        if (PrefUtils.getBoolean(PrefUtils.FIRST_OPEN, true)) {
+            FeedDataContentProvider.addFeed(HomeActivity.this, "senbazuru.fr/files/feed.xml", "Senbazuru", false);
+        }
+
         if (PrefUtils.getBoolean(PrefUtils.REFRESH_ENABLED, true)) {
             // starts the service independent to this activity
             startService(new Intent(this, RefreshService.class));
         } else {
             stopService(new Intent(this, RefreshService.class));
         }
-        if (PrefUtils.getBoolean(PrefUtils.REFRESH_ON_OPEN_ENABLED, true)) {
+
+        if (PrefUtils.getBoolean(PrefUtils.REFRESH_ON_OPEN_ENABLED, true) || PrefUtils.getBoolean(PrefUtils.FIRST_OPEN, true)) {
             if (!PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
                 startService(new Intent(HomeActivity.this, FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS));
             }
+            PrefUtils.putBoolean(PrefUtils.FIRST_OPEN, false);
         }
     }
 
@@ -318,16 +325,6 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
         mDrawerList.setItemChecked(position, true);
 
         // First launch
-        if (PrefUtils.getBoolean(PrefUtils.FIRST_OPEN, true)) {
-            PrefUtils.putBoolean(PrefUtils.FIRST_OPEN, false);
-
-            //Premier lancement: on ajoute le flux RSS à la main
-            FeedDataContentProvider.addFeed(HomeActivity.this, "senbazuru.fr/files/feed.xml", "Senbazuru", false);
-            //Premier lancement: et on lance le refresh a la main
-            if (!PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
-                startService(new Intent(HomeActivity.this, FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS));
-            }
-        }
 
         // Set title & icon
         switch (mCurrentDrawerPos) {

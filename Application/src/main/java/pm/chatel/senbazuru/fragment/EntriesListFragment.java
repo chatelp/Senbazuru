@@ -32,6 +32,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.view.GestureDetector;
@@ -144,7 +145,7 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
         }
     };
     private Button mRefreshListBtn;
-    private SwipeRefreshLayout mSwipeLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -168,9 +169,9 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
             setListAdapter(mEntriesCursorAdapter);
         }
 
-        mSwipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
-        mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -255,7 +256,7 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
     @Override
     public void onStart() {
         super.onStart();
-        handleProgress();
+        //handleProgress();
         PrefUtils.registerOnPrefChangeListener(mPrefListener);
 
         if (mUri != null) {
@@ -270,8 +271,18 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
         }
     }
 
+    //from SwipeRefreshLayout.OnRefreshListener interface
     @Override public void onRefresh() {
-        startRefresh();
+        if (!PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
+            if (mUri != null && FeedDataContentProvider.URI_MATCHER.match(mUri) == FeedDataContentProvider.URI_ENTRIES_FOR_FEED) {
+                getActivity().startService(new Intent(getActivity(), FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS).putExtra(Constants.FEED_ID,
+                        mUri.getPathSegments().get(1)));
+            } else {
+                getActivity().startService(new Intent(getActivity(), FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS));
+            }
+        }
+
+        handleProgress();
     }
 
 
@@ -345,19 +356,6 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
         return super.onOptionsItemSelected(item);
     }
 
-    private void startRefresh() {
-        if (!PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
-            if (mUri != null && FeedDataContentProvider.URI_MATCHER.match(mUri) == FeedDataContentProvider.URI_ENTRIES_FOR_FEED) {
-                getActivity().startService(new Intent(getActivity(), FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS).putExtra(Constants.FEED_ID,
-                        mUri.getPathSegments().get(1)));
-            } else {
-                getActivity().startService(new Intent(getActivity(), FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS));
-            }
-        }
-
-        handleProgress();
-    }
-
     public Uri getUri() {
         return mUri;
     }
@@ -401,17 +399,22 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
 
     private void handleProgress() {
         if (PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
-            mSwipeLayout.setRefreshing(true);
+            mSwipeRefreshLayout.setRefreshing(true);
         } else {
-            mSwipeLayout.setRefreshing(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(false);
 
-            mNewEntriesNumber = 0;
-            mListDisplayDate = new Date().getTime();
+                    mNewEntriesNumber = 0;
+                    mListDisplayDate = new Date().getTime();
 
-            refreshUI();
-            if (mUri != null) {
-                restartLoaders();
-            }
+                    refreshUI();
+                    if (mUri != null) {
+                        restartLoaders();
+                    }
+                }
+            }, 1000);
         }
     }
     public void markAllEntriesAsRead() {
