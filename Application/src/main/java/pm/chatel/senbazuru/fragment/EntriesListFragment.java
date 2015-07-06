@@ -379,9 +379,11 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
     }
 
     private void restartLoaders() {
-        LoaderManager loaderManager = getLoaderManager();
-        loaderManager.restartLoader(ENTRIES_LOADER_ID, null, mEntriesLoader);
-        loaderManager.restartLoader(NEW_ENTRIES_NUMBER_LOADER_ID, null, mEntriesNumberLoader);
+        if(isAdded()) { // check if fragment still added to an activity
+            LoaderManager loaderManager = getLoaderManager();
+            loaderManager.restartLoader(ENTRIES_LOADER_ID, null, mEntriesLoader);
+            loaderManager.restartLoader(NEW_ENTRIES_NUMBER_LOADER_ID, null, mEntriesNumberLoader);
+        }
     }
 
     private void refreshUI() {
