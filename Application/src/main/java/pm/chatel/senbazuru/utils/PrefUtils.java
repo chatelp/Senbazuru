@@ -59,6 +59,7 @@ public class PrefUtils {
 
     public static final String SHOW_SEARCH = "show_search";
 
+    public static final String GCM_REG_ID = "gcmregid";
 
     public static boolean getBoolean(String key, boolean defValue) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApplication.getContext());

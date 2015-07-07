@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import pm.chatel.senbazuru.cloudbackend.registration.Registration;
+import pm.chatel.senbazuru.utils.PrefUtils;
 
 /**
  * Created by pierre on 12/06/15.
@@ -33,21 +34,28 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
+        if (!PrefUtils.getString(PrefUtils.GCM_REG_ID, "").equals("")) {
+            return "Device already registered with GCM";
+        }
+
+
         if (regService == null) {
-            Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
+           /* Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
                     // Need setRootUrl and setGoogleClientRequestInitializer only for local testing,
                     // otherwise they can be skipped
-                    .setRootUrl("http://10.0.2.2:8080/_ah/api/")
-                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                        @Override
-                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest)
-                                throws IOException {
-                            abstractGoogleClientRequest.setDisableGZipContent(true);
-                        }
-                    });
-            // end of optional local run code
-
+//                    .setRootUrl("http://192.168.1.1:8080/_ah/api/") //http://10.0.2.2:8080/_ah/api/
+//                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+//                        @Override
+//                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest)
+//                                throws IOException {
+//                            abstractGoogleClientRequest.setDisableGZipContent(true);
+//                        }
+//                    });
+                    // end of optional local run code
+             */
+            Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                    .setRootUrl("https://chatelp-senbazuru.appspot.com/_ah/api/");
             regService = builder.build();
         }
 
@@ -57,6 +65,8 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
             String regId = gcm.register(SENDER_ID);
+            PrefUtils.putString(PrefUtils.GCM_REG_ID, regId);
+
             msg = "Device registered, registration ID=" + regId;
 
             // You should send the registration ID to your server over HTTP,
@@ -74,7 +84,7 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
         Logger.getLogger("REGISTRATION").log(Level.INFO, msg);
     }
 }

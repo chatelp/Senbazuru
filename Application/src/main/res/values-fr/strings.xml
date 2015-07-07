@@ -33,7 +33,7 @@
     <string name="menu_settings">Paramètres</string>
     <string name="menu_refresh">Actualiser</string>
     <string name="menu_all_read">Marquer tout les tutoriels comme effectués</string>
-    <string name="flym_feeds">Senbazuru Origami</string>
+    <string name="notifications_title">Senbazuru Origami</string>
     <string name="error">Erreur</string>
     <string name="network_error">Pas de connexion disponible</string>
     <string name="loading">Chargement en cours…</string>
@@ -44,6 +44,7 @@
     <string name="mark_all_as_done">Marquer tous ces tutoriels comme effectués ?</string>
     <string name="mark_all_as_done_yes">Marquer effectués</string>
     <string name="mark_all_as_done_no">Annuler</string>
+    <string name="new_tutorial_notification">Un nouveau tutoriel vient d\'être publié !</string>
 
     <!-- FEEDS -->
     <string name="feeds">Flux</string>

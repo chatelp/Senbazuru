@@ -47,7 +47,6 @@ package pm.chatel.senbazuru.service;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -59,8 +58,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.text.Html;
-import android.text.TextUtils;
 import android.util.Xml;
 import android.widget.Toast;
 
@@ -69,12 +66,9 @@ import pm.chatel.senbazuru.MainApplication;
 import pm.chatel.senbazuru.R;
 import pm.chatel.senbazuru.activity.HomeActivity;
 import pm.chatel.senbazuru.parser.RssAtomParser;
-import pm.chatel.senbazuru.provider.FeedData;
 import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
 import pm.chatel.senbazuru.provider.FeedData.FeedColumns;
 import pm.chatel.senbazuru.provider.FeedData.TaskColumns;
-import pm.chatel.senbazuru.utils.ArticleTextExtractor;
-import pm.chatel.senbazuru.utils.HtmlUtils;
 import pm.chatel.senbazuru.utils.NetworkUtils;
 import pm.chatel.senbazuru.utils.PrefUtils;
 
@@ -86,7 +80,6 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Callable;
@@ -229,7 +222,7 @@ public class FetcherService extends IntentService {
                             .setTicker(text) //
                             .setWhen(System.currentTimeMillis()) //
                             .setAutoCancel(true) //
-                            .setContentTitle(getString(R.string.flym_feeds)) //
+                            .setContentTitle(getString(R.string.notifications_title)) //
                             .setContentText(text) //
                             .setLights(0xffffffff, 0, 0);
 

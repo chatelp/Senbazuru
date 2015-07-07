@@ -73,8 +73,9 @@ public abstract class BaseActivity extends ActionBarActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS); // Tweak to allow setting status bar color
         }
 
-        //GCM Setup //TODO
-        //new GcmRegistrationAsyncTask(this).execute();
+
+        //GCM Setup and registration
+        new GcmRegistrationAsyncTask(this).execute();
 
     }
 

@@ -1,16 +1,25 @@
 package pm.chatel.senbazuru.gcm;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import pm.chatel.senbazuru.Constants;
+import pm.chatel.senbazuru.MainApplication;
+import pm.chatel.senbazuru.R;
+import pm.chatel.senbazuru.activity.HomeActivity;
+import pm.chatel.senbazuru.utils.PrefUtils;
 
 
 /**
@@ -35,17 +44,46 @@ public class GcmIntentService extends IntentService {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 Logger.getLogger("GCM_RECEIVED").log(Level.INFO, extras.toString());
 
-                showToast(extras.getString("message"));
+                handleNewTutorial(extras.getString("message"));
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    protected void showToast(final String message) {
+    protected void handleNewTutorial(final String message) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                Intent notificationIntent = new Intent(getApplicationContext(), HomeActivity.class);
+                PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+                Notification.Builder notifBuilder = new Notification.Builder(MainApplication.getContext()) //
+                        .setContentIntent(contentIntent)
+                        .setSmallIcon(R.drawable.senbazuru_ui_icon_44pt) //
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.android_icon)) //
+                        .setWhen(System.currentTimeMillis()) //
+                        .setAutoCancel(true) //
+                        .setContentTitle(getString(R.string.notifications_title)) //
+                        .setContentText(message) //
+                        .setLights(0xffffffff, 0, 0);
+
+                if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_VIBRATE, false)) {
+                    notifBuilder.setVibrate(new long[]{0, 1000});
+                }
+
+                String ringtone = PrefUtils.getString(PrefUtils.NOTIFICATIONS_RINGTONE, null);
+                if (ringtone != null && ringtone.length() > 0) {
+                    notifBuilder.setSound(Uri.parse(ringtone));
+                }
+
+                if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_LIGHT, false)) {
+                    notifBuilder.setLights(0xffffffff, 300, 1000);
+                }
+
+                if (Constants.NOTIF_MGR != null) {
+                    Constants.NOTIF_MGR.notify(0, notifBuilder.getNotification());
+                }
             }
         });
     }
