@@ -35,8 +35,6 @@ android {
         targetSdkVersion 22
         versionCode getVersionCode()
         versionName "1.0.0-beta"
-        // Enabling multidex support.
-        multiDexEnabled true
     }
 
     compileOptions {
@@ -74,16 +72,16 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.google.android.gms:play-services-wearable:7.5.0'
     compile 'com.melnykov:floatingactionbutton:1.3.0'
     compile 'org.jsoup:jsoup:+'
     compile 'com.squareup.picasso:picasso:+'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:+'
-    compile 'com.google.android.gms:play-services:7.5.0'
+    //compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.google.android.gms:play-services-ads:7.5.0'
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.google.android.gms:play-services-analytics:7.5.0'
+    compile 'com.google.android.gms:play-services-gcm:7.5.0'
     compile project(path: ':cloudBackend', configuration: 'android-endpoints')
     compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
         transitive = true;

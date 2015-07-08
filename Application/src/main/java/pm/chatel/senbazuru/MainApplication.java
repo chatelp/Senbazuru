@@ -21,7 +21,7 @@ package pm.chatel.senbazuru;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
+//import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
@@ -42,11 +42,5 @@ public class MainApplication extends Application {
         mContext = getApplicationContext();
 
         PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, false); // init
-    }
-
-    @Override
-    public void attachBaseContext(Context base) {
-        MultiDex.install(base);
-        super.attachBaseContext(base);
     }
 }
