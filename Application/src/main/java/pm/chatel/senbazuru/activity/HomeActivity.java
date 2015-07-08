@@ -55,6 +55,8 @@ import pm.chatel.senbazuru.utils.PrefUtils;
 
 public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, AlertFragment.AlertDialogListener {
 
+    public static final String EXTRA_SHOULD_REFRESH = "pm.chatel.senbazuru.should.refresh";
+
     private static final String STATE_CURRENT_DRAWER_POS = "STATE_CURRENT_DRAWER_POS";
 
     private static final String FEED_UNREAD_NUMBER = "(SELECT " + Constants.DB_COUNT + " FROM " + EntryColumns.TABLE_NAME + " WHERE " +
@@ -175,6 +177,13 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
 
         // We reset the current drawer position
         selectDrawerItem(0);
+
+        boolean refreshIntent = intent.getBooleanExtra(this.EXTRA_SHOULD_REFRESH, false);
+        if (refreshIntent) {
+            if (!PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
+                startService(new Intent(HomeActivity.this, FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS));
+            }
+        }
     }
 
     @Override

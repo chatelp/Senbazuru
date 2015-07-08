@@ -78,7 +78,6 @@ dependencies {
     compile 'org.jsoup:jsoup:+'
     compile 'com.squareup.picasso:picasso:+'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:+'
-    //compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.google.android.gms:play-services-ads:7.5.0'
     compile 'com.google.android.gms:play-services-analytics:7.5.0'
     compile 'com.google.android.gms:play-services-gcm:7.5.0'

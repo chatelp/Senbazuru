@@ -23,6 +23,7 @@ import pm.chatel.senbazuru.utils.PrefUtils;
  */
 public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
     private static Registration regService = null;
+    private static String regId = null;
     private GoogleCloudMessaging gcm;
     private Context context;
 
@@ -34,26 +35,11 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
-        if (!PrefUtils.getString(PrefUtils.GCM_REG_ID, "").equals("")) {
-            return "Device already registered with GCM";
+        if (regId != null) {
+            return "Device ALREADY registered with GCM, registration ID=" + regId;
         }
 
-
         if (regService == null) {
-           /* Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
-                    new AndroidJsonFactory(), null)
-                    // Need setRootUrl and setGoogleClientRequestInitializer only for local testing,
-                    // otherwise they can be skipped
-//                    .setRootUrl("http://192.168.1.1:8080/_ah/api/") //http://10.0.2.2:8080/_ah/api/
-//                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-//                        @Override
-//                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest)
-//                                throws IOException {
-//                            abstractGoogleClientRequest.setDisableGZipContent(true);
-//                        }
-//                    });
-                    // end of optional local run code
-             */
             Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                     .setRootUrl("https://chatelp-senbazuru.appspot.com/_ah/api/");
             regService = builder.build();
@@ -64,10 +50,9 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
             if (gcm == null) {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
-            String regId = gcm.register(SENDER_ID);
-            PrefUtils.putString(PrefUtils.GCM_REG_ID, regId);
+            regId = gcm.register(SENDER_ID);
 
-            msg = "Device registered, registration ID=" + regId;
+            msg = "Device registered with GCM, registration ID=" + regId;
 
             // You should send the registration ID to your server over HTTP,
             // so it can use GCM/HTTP or CCS to send messages to your app.

@@ -54,7 +54,8 @@ public class GcmIntentService extends IntentService {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                Intent notificationIntent = new Intent(getApplicationContext(), HomeActivity.class);
+                Intent notificationIntent = new Intent(getApplicationContext(), HomeActivity.class).putExtra(HomeActivity.EXTRA_SHOULD_REFRESH, true);
+
                 PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
