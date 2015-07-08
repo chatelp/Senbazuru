@@ -13,19 +13,20 @@
 #for crashlytics
 -keepattributes SourceFile,LineNumberTable
 
-#for GCM
--keep class * extends java.util.ListResourceBundle {
-   protected Object[][] getContents();
+
+#for GCM - http://stackoverflow.com/questions/16229765/how-to-configure-proguard-for-android-application-using-google-drive-sdk/16279755#16279755
+-keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault
+
+-keepclassmembers class * {
+  @com.google.api.client.util.Key <fields>;
 }
 
--keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
-   public static final *** NULL;
-}
+-keep class com.google.** { *;}
+-keep interface com.google.** { *;}
+-dontwarn com.google.**
 
--keepnames @com.google.android.gms.common.annotation.KeepName class * -keepclassmembernames class * {
-   @com.google.android.gms.common.annotation.KeepName *;
-}
+# Needed by google-http-client-android when linking against an older platform version
+-dontwarn com.google.api.client.extensions.android.**
 
--keepnames class * implements android.os.Parcelable {
-   public static final ** CREATOR;
-}
+# Needed by google-api-client-android when linking against an older platform version
+-dontwarn com.google.api.client.googleapis.extensions.android.**
