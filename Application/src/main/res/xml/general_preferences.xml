@@ -100,12 +100,13 @@
             android:summary="@string/settings_notifications_enabled_description"
             android:title="@string/settings_notifications_enabled"/>
 
-        <RingtonePreference
+        <CheckBoxPreference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:defaultValue="true"
             android:dependency="notifications.enabled"
             android:key="notifications.ringtone"
-            android:ringtoneType="notification"
+            android:summary="@string/settings_notifications_ringtone_description"
             android:title="@string/settings_notifications_ringtone"/>
 
         <CheckBoxPreference

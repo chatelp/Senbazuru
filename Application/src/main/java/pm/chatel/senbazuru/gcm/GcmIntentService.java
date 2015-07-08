@@ -54,36 +54,39 @@ public class GcmIntentService extends IntentService {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                Intent notificationIntent = new Intent(getApplicationContext(), HomeActivity.class).putExtra(HomeActivity.EXTRA_SHOULD_REFRESH, true);
+                if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_ENABLED, true)) {
+                    Intent notificationIntent = new Intent(getApplicationContext(), HomeActivity.class).putExtra(HomeActivity.EXTRA_SHOULD_REFRESH, true);
 
-                PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
 
-                Notification.Builder notifBuilder = new Notification.Builder(MainApplication.getContext()) //
-                        .setContentIntent(contentIntent)
-                        .setSmallIcon(R.drawable.senbazuru_ui_icon_44pt) //
-                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.android_icon)) //
-                        .setWhen(System.currentTimeMillis()) //
-                        .setAutoCancel(true) //
-                        .setContentTitle(getString(R.string.notifications_title)) //
-                        .setContentText(message) //
-                        .setLights(0xffffffff, 0, 0);
+                    Notification.Builder notifBuilder = new Notification.Builder(MainApplication.getContext()) //
+                            .setContentIntent(contentIntent)
+                            .setSmallIcon(R.drawable.senbazuru_ui_icon_44pt) //
+                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.android_icon)) //
+                            .setWhen(System.currentTimeMillis()) //
+                            .setAutoCancel(true) //
+                            .setContentTitle(getString(R.string.notifications_title)) //
+                            .setContentText(message) //
+                            .setLights(0xffffffff, 0, 0);
 
-                if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_VIBRATE, false)) {
-                    notifBuilder.setVibrate(new long[]{0, 1000});
-                }
+                    if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_VIBRATE, false)) {
+                        notifBuilder.setVibrate(new long[]{0, 1000});
+                    }
 
-                String ringtone = PrefUtils.getString(PrefUtils.NOTIFICATIONS_RINGTONE, null);
-                if (ringtone != null && ringtone.length() > 0) {
-                    notifBuilder.setSound(Uri.parse(ringtone));
-                }
+                    if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_RINGTONE, false)) {
+                        Uri notifURI = Uri.parse("android.resource://"
+                                + getBaseContext().getPackageName() + "/" + R.raw.dada);
+                        notifBuilder.setSound(notifURI);
+                    }
 
-                if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_LIGHT, false)) {
-                    notifBuilder.setLights(0xffffffff, 300, 1000);
-                }
+                    if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_LIGHT, false)) {
+                        notifBuilder.setLights(0xffffffff, 300, 1000);
+                    }
 
-                if (Constants.NOTIF_MGR != null) {
-                    Constants.NOTIF_MGR.notify(0, notifBuilder.getNotification());
+                    if (Constants.NOTIF_MGR != null) {
+                        Constants.NOTIF_MGR.notify(0, notifBuilder.getNotification());
+                    }
                 }
             }
         });

@@ -157,13 +157,15 @@
     <string name="settings_notifications_enabled_description">Active les notifications en cas de
         nouveaux tutoriels
     </string>
-    <string name="settings_notifications_ringtone">Sonnerie</string>
-    <string name="settings_notifications_ringtone_none">Aucune</string>
+    <string name="settings_notifications_ringtone">Sonner</string>
+    <string name="settings_notifications_ringtone_description">Active la notification sonore pour les nouveaux
+        tutoriels
+    </string>
     <string name="settings_notifications_vibrate">Vibrer</string>
     <string name="settings_notifications_vibrate_description">Active la vibration pour les nouveaux
         tutoriels
     </string>
-    <string name="settings_notifications_light">LED</string>
+    <string name="settings_notifications_light">Allumer la LED</string>
     <string name="settings_notifications_light_description">Active les notifications LED pour les nouveaux tutoriels</string>
     <string name="settings_category_content_presentation">Présentation des tutoriels</string>
     <string name="settings_font_size">Taille du texte</string>

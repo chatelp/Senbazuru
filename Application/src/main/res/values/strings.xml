@@ -160,10 +160,11 @@
     <string name="settings_notifications_enabled_description">Enable notifications in case of new
         tutorials
     </string>
-    <string name="settings_notifications_ringtone">Ringtone</string>
-    <string name="settings_notifications_ringtone_none">None</string>
+    <string name="settings_notifications_ringtone">Ring</string>
+    <string name="settings_notifications_ringtone_description">Enable ringtone on new tutorials
+    </string>
     <string name="settings_notifications_vibrate">Vibrate</string>
-    <string name="settings_notifications_vibrate_description">Enable the vibration on new tutorials
+    <string name="settings_notifications_vibrate_description">Enable vibration on new tutorials
     </string>
     <string name="settings_notifications_light">Light</string>
     <string name="settings_notifications_light_description">Enable notification light on new tutorials</string>

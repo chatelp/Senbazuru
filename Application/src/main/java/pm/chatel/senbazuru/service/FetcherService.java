@@ -230,9 +230,10 @@ public class FetcherService extends IntentService {
                         notifBuilder.setVibrate(new long[]{0, 1000});
                     }
 
-                    String ringtone = PrefUtils.getString(PrefUtils.NOTIFICATIONS_RINGTONE, null);
-                    if (ringtone != null && ringtone.length() > 0) {
-                        notifBuilder.setSound(Uri.parse(ringtone));
+                    if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_RINGTONE, false)) {
+                        Uri notifURI = Uri.parse("android.resource://"
+                                + getBaseContext().getPackageName() + "/" + R.raw.dada);
+                        notifBuilder.setSound(notifURI);
                     }
 
                     if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_LIGHT, false)) {
