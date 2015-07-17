@@ -60,6 +60,7 @@ import pm.chatel.senbazuru.provider.FeedData;
 import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
 import pm.chatel.senbazuru.provider.FeedDataContentProvider;
 import pm.chatel.senbazuru.service.FetcherService;
+import pm.chatel.senbazuru.utils.FileUtils;
 import pm.chatel.senbazuru.utils.PrefUtils;
 import pm.chatel.senbazuru.utils.UiUtils;
 
@@ -318,6 +319,11 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
             menu.findItem(R.id.menu_share_starred).setVisible(false);
         }
 
+        boolean isYoutubeInstalled = FileUtils.isAppInstalled(getActivity(), "com.google.android.youtube");
+        if(!isYoutubeInstalled) {
+            menu.findItem(R.id.menu_youtube).setVisible(false);
+        }
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -347,10 +353,24 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
             case R.id.menu_all_read: {
                 if (mEntriesCursorAdapter != null) {
 
-                    DialogFragment dialog = new AlertFragment();
+                    DialogFragment dialog = new AlertFragment(
+                            R.string.mark_all_as_done,
+                            R.string.mark_all_as_done_yes,
+                            R.string.mark_all_as_done_no);
+
                     dialog.show(getFragmentManager(), "confirmation");
                 }
                 return true;
+            }
+            case R.id.menu_youtube: {
+
+                DialogFragment dialog = new AlertFragment(
+                        R.string.open_youtube_channel,
+                        R.string.open_youtube_channel_yes,
+                        R.string.open_youtube_channel_no);
+
+                dialog.show(getFragmentManager(), "confirmation");
+
             }
         }
         return super.onOptionsItemSelected(item);

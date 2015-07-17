@@ -78,7 +78,7 @@ public class EntryView extends WebView {
     private static final String QUOTE_BACKGROUND_COLOR = "#e6e6e6" ;
     private static final String QUOTE_LEFT_COLOR = "#a6a6a6";
     private static final String TEXT_COLOR = "#000000";
-    private static final String BUTTON_COLOR = "#52A7DF";
+    private static final String BUTTON_COLOR = "#FF5252";
     private static final String SUBTITLE_COLOR = "#666666";
     private static final String SUBTITLE_BORDER_COLOR = "solid #ddd";
     private static final String CSS = "<head><style type='text/css'> "
@@ -180,6 +180,16 @@ public class EntryView extends WebView {
         }
 
         content.append(dateStringBuilder).append(SUBTITLE_END).append(contentText).append(BODY_END);
+
+        boolean isYoutubeInstalled = FileUtils.isAppInstalled(getContext(), "com.google.android.youtube");
+        if(isYoutubeInstalled) {
+            content.append(BUTTON_SECTION_START).append(BUTTON_START);
+            String videoURL = "https://youtu.be/sH25zyJQZ9U";
+            content.append(context.getString(R.string.open_in_youtube)).append(BUTTON_MIDDLE).append("injectedJSObject.onClickYoutubeVideoButton(\"").append(videoURL).append("\");");
+            content.append(BUTTON_END).append(BUTTON_SECTION_END);
+        }
+
+        content.append(BODY_END);
 
         /*content.append(dateStringBuilder).append(SUBTITLE_END).append(contentText).append(BUTTON_SECTION_START).append(BUTTON_START);
 
@@ -303,8 +313,7 @@ public class EntryView extends WebView {
     }
 
     public interface EntryViewManager {
-
-        public void onClickEnclosure();
+        public void onClickYoutubeVideoButton(String videoURL);
 
         public void onStartVideoFullScreen();
 
@@ -321,8 +330,8 @@ public class EntryView extends WebView {
         }
 
         @JavascriptInterface
-        public void onClickEnclosure() {
-            mEntryViewMgr.onClickEnclosure();
+        public void onClickYoutubeVideoButton(String videoURL) {
+            mEntryViewMgr.onClickYoutubeVideoButton(videoURL);
         }
     }
 }

@@ -4,6 +4,12 @@
       xmlns:tools="http://schemas.android.com/tools">
 
     <item
+        android:id="@+id/menu_youtube"
+        android:icon="@drawable/youtube_button"
+        android:title="@string/menu_youtube"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
+    <item
         android:id="@+id/menu_all_read"
         android:icon="@drawable/read_all"
         android:title="@string/menu_all_read"

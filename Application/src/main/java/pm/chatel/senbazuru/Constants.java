@@ -76,4 +76,6 @@ public final class Constants {
     public static final int UPDATE_THROTTLE_DELAY = 500;
 
     public static final MatrixCursor EMPTY_CURSOR = new MatrixCursor(new String[]{BaseColumns._ID});
+
+    public static final String SENBAZURU_CHANNEL = "https://www.youtube.com/channel/UCVIGU6j8Tb8FySfYNDC6gJQ";
 }

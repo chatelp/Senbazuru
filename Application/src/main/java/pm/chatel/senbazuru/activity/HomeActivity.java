@@ -381,12 +381,19 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        mEntriesFragment.markAllEntriesAsRead();
+    public void onAlertPositiveClick(AlertFragment alert) {
+        switch(alert.getMainMessageID()) {
+            case R.string.mark_all_as_done:
+                mEntriesFragment.markAllEntriesAsRead();
+                break;
+            case R.string.open_youtube_channel:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.SENBAZURU_CHANNEL)));
+                break;
+        }
     }
 
     @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
+    public void onAlertNegativeClick(AlertFragment alert) {
         //do nothing
     }
 }

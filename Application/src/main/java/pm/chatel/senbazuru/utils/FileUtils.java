@@ -19,6 +19,9 @@
 
 package pm.chatel.senbazuru.utils;
 
+import android.content.Context;
+import android.content.Intent;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,5 +38,10 @@ public class FileUtils {
         inChannel.transferTo(0, inChannel.size(), outChannel);
         inStream.close();
         outStream.close();
+    }
+
+    public static boolean isAppInstalled(Context context, String packageName) {
+        Intent mIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        return mIntent != null;
     }
 }

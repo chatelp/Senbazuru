@@ -23,7 +23,6 @@ import pm.chatel.senbazuru.utils.PrefUtils;
  */
 public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
     private static Registration regService = null;
-    private static String regId = null;
     private GoogleCloudMessaging gcm;
     private Context context;
 
@@ -35,8 +34,8 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
-        if (regId != null) {
-            return "Device ALREADY registered with GCM, registration ID=" + regId;
+        if (!PrefUtils.getString(PrefUtils.GCM_REG_ID, "").equals("")) {
+            return "Device ALREADY registered with GCM, registration ID=" + PrefUtils.getString(PrefUtils.GCM_REG_ID, "");
         }
 
         if (regService == null) {
@@ -50,7 +49,8 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
             if (gcm == null) {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
-            regId = gcm.register(SENDER_ID);
+            String regId = gcm.register(SENDER_ID);
+            PrefUtils.putString(PrefUtils.GCM_REG_ID, regId);
 
             msg = "Device registered with GCM, registration ID=" + regId;
 

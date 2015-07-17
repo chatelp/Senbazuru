@@ -32,6 +32,7 @@
     <string name="colon">\u00A0:\u00A0</string>
     <string name="menu_settings">Paramètres</string>
     <string name="menu_refresh">Actualiser</string>
+    <string name="menu_youtube">Ouvrir notre chaîne YouTube</string>
     <string name="menu_all_read">Marquer tout les tutoriels comme effectués</string>
     <string name="notifications_title">Senbazuru Origami</string>
     <string name="error">Erreur</string>
@@ -44,6 +45,9 @@
     <string name="mark_all_as_done">Marquer tous ces tutoriels comme effectués ?</string>
     <string name="mark_all_as_done_yes">Marquer effectués</string>
     <string name="mark_all_as_done_no">Annuler</string>
+    <string name="open_youtube_channel">Ouvrir notre chaîne YouTube ?</string>
+    <string name="open_youtube_channel_yes">Ouvrir</string>
+    <string name="open_youtube_channel_no">Annuler</string>
     <string name="new_tutorial_notification">Un nouveau tutoriel vient d\'être publié !</string>
 
     <!-- FEEDS -->
@@ -130,6 +134,7 @@
     <string name="share_favorites_title">Senbazuru : tutoriels favoris</string>
     <string name="copied_clipboard">Lien copié</string>
     <string name="get_full_text">Récupérer le texte complet</string>
+    <string name="open_in_youtube">Afficher la vidéo sur YouTube</string>
     <string name="original_text">Affiche le texte original</string>
     <string name="see_enclosure">Voir le fichier joint</string>
     <string name="see_link">Ouvrir dans le navigateur web</string>

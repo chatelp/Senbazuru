@@ -367,6 +367,16 @@ public class EntryFragment extends Fragment implements BaseActivity.OnFullScreen
     }
 
     @Override
+    public void onClickYoutubeVideoButton(final String videoURL) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //Toast.makeText(getActivity(), "youtube button clicked - URL: " + videoURL, Toast.LENGTH_LONG).show();
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(videoURL)));
+            }
+        });
+    }
+
     public void onClickEnclosure() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
