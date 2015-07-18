@@ -56,7 +56,9 @@ public class HtmlUtils {
     private static final Pattern END_BR_PATTERN = Pattern.compile("(\\s*<br\\s*[/]*>\\s*)*$", Pattern.CASE_INSENSITIVE);
     private static final Pattern MULTIPLE_BR_PATTERN = Pattern.compile("(\\s*<br\\s*[/]*>\\s*){3,}", Pattern.CASE_INSENSITIVE);
     private static final Pattern EMPTY_LINK_PATTERN = Pattern.compile("<a\\s+[^>]*></a>", Pattern.CASE_INSENSITIVE);
-
+    //http://stackoverflow.com/questions/7894727/youtube-complete-java-regex
+    private static final Pattern VIDEO_URL_PATTERN = Pattern.compile("https?:\\/\\/(?:[0-9A-Z-]+\\.)?(?:youtu\\.be\\/|youtube\\.com\\S*[^\\w\\-\\s])([\\w\\-]{11})(?=[^\\w\\-]|$)[?=&+%\\w]*", Pattern.CASE_INSENSITIVE);
+    private static final Pattern VIDEO_URL_PATTERN_ORIG = Pattern.compile("https?:\\/\\/(?:[0-9A-Z-]+\\.)?(?:youtu\\.be\\/|youtube\\.com\\S*[^\\w\\-\\s])([\\w\\-]{11})(?=[^\\w\\-]|$)(?![?=&+%\\w]*(?:['\"][^<>]*>|<\\/a>))[?=&+%\\w]*", Pattern.CASE_INSENSITIVE);
 
     public static String improveHtmlContent(String content, String baseUri) {
         content = ADS_PATTERN.matcher(content).replaceAll("");
@@ -144,6 +146,16 @@ public class HtmlUtils {
             }
         }
 
+        return null;
+    }
+
+    public static String getVideoURL(String content) {
+        if (content != null) {
+            Matcher matcher = VIDEO_URL_PATTERN.matcher(content);
+            if(matcher.find()) { //only the first occurrence
+                return matcher.group();
+            }
+        }
         return null;
     }
 

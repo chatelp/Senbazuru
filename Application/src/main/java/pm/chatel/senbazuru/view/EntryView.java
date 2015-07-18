@@ -141,7 +141,7 @@ public class EntryView extends WebView {
         mEntryViewMgr = manager;
     }
 
-    public void setHtml(long entryId, String title, String link, String contentText, String enclosure, String author, long timestamp, boolean preferFullText) {
+    public void setHtml(long entryId, String title, String link, String contentText, String videoURL, String author, long timestamp) {
 
             contentText = HtmlUtils.replaceImageURLs(contentText, entryId);
             if (getSettings().getBlockNetworkImage()) {
@@ -160,10 +160,10 @@ public class EntryView extends WebView {
         // }
 
         // do not put 'null' to the base url...
-        loadDataWithBaseURL("", generateHtmlContent(title, link, contentText, enclosure, author, timestamp, preferFullText), TEXT_HTML, Constants.UTF8, null);
+        loadDataWithBaseURL("", generateHtmlContent(title, link, contentText, videoURL, author, timestamp), TEXT_HTML, Constants.UTF8, null);
     }
 
-    private String generateHtmlContent(String title, String link, String contentText, String enclosure, String author, long timestamp, boolean preferFullText) {
+    private String generateHtmlContent(String title, String link, String contentText, String videoURL, String author, long timestamp) {
         StringBuilder content = new StringBuilder(CSS).append(BODY_START);
 
         if (link == null) {
@@ -182,34 +182,13 @@ public class EntryView extends WebView {
         content.append(dateStringBuilder).append(SUBTITLE_END).append(contentText).append(BODY_END);
 
         boolean isYoutubeInstalled = FileUtils.isAppInstalled(getContext(), "com.google.android.youtube");
-        if(isYoutubeInstalled) {
+        if(isYoutubeInstalled && videoURL != null && !videoURL.isEmpty()) {
             content.append(BUTTON_SECTION_START).append(BUTTON_START);
-            String videoURL = "https://youtu.be/sH25zyJQZ9U";
             content.append(context.getString(R.string.open_in_youtube)).append(BUTTON_MIDDLE).append("injectedJSObject.onClickYoutubeVideoButton(\"").append(videoURL).append("\");");
             content.append(BUTTON_END).append(BUTTON_SECTION_END);
         }
 
         content.append(BODY_END);
-
-        /*content.append(dateStringBuilder).append(SUBTITLE_END).append(contentText).append(BUTTON_SECTION_START).append(BUTTON_START);
-
-        if (!preferFullText) {
-            content.append(context.getString(R.string.get_full_text)).append(BUTTON_MIDDLE).append("injectedJSObject.onClickFullText();");
-        } else {
-            content.append(context.getString(R.string.original_text)).append(BUTTON_MIDDLE).append("injectedJSObject.onClickOriginalText();");
-        }
-        content.append(BUTTON_END);
-
-        if (enclosure != null && enclosure.length() > 6 && !enclosure.contains(IMAGE_ENCLOSURE)) {
-            content.append(BUTTON_START).append(context.getString(R.string.see_enclosure)).append(BUTTON_MIDDLE)
-                    .append("injectedJSObject.onClickEnclosure();").append(BUTTON_END);
-        }
-
-        if (link.length() > 0) {
-            content.append(LINK_BUTTON_START).append(link).append(LINK_BUTTON_MIDDLE).append(context.getString(R.string.see_link)).append(LINK_BUTTON_END);
-        }
-
-        content.append(BUTTON_SECTION_END).append(BODY_END);*/
 
         return content.toString();
     }

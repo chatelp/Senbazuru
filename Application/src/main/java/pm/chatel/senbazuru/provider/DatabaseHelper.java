@@ -61,8 +61,8 @@ import static pm.chatel.senbazuru.provider.FeedData.*;
 
 class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "FeedEx.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final String DATABASE_NAME = "Senbazuru.db";
+    private static final int DATABASE_VERSION = 1;
 
     private static final String ALTER_TABLE = "ALTER TABLE ";
     private static final String ADD = " ADD ";
@@ -104,6 +104,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+
+        /*
         if (oldVersion < 2) {
             executeCatchedSQL(database, ALTER_TABLE + FeedColumns.TABLE_NAME + ADD + FeedColumns.REAL_LAST_UPDATE + ' ' + TYPE_DATE_TIME);
         }
@@ -129,7 +131,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
         }
         if (oldVersion < 8) {
             executeCatchedSQL(database, ALTER_TABLE + EntryColumns.TABLE_NAME + ADD + EntryColumns.IMAGE_URL + ' ' + TYPE_TEXT);
-        }
+        }*/
+
     }
 
     private void executeCatchedSQL(SQLiteDatabase database, String query) {

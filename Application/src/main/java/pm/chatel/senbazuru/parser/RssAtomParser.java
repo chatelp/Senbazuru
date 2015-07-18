@@ -380,11 +380,14 @@ public class RssAtomParser extends DefaultHandler {
                 entryValues.put(EntryColumns.TITLE, improvedTitle);
 
                 String improvedContent = null;
+                String videoURL = null;
                 String mainImageUrl = null;
                 ArrayList<String> imagesUrls = null;
                 if (mDescription != null) {
-                    // Improve the description
+                    // Improve the description & get video url
                     improvedContent = HtmlUtils.improveHtmlContent(mDescription.toString(), mFeedBaseUrl);
+                    videoURL = HtmlUtils.getVideoURL(mDescription.toString());
+
                     if (mFetchImages) {
                         imagesUrls = HtmlUtils.getImageURLs(improvedContent);
                         if (!imagesUrls.isEmpty()) {
@@ -396,6 +399,10 @@ public class RssAtomParser extends DefaultHandler {
 
                     if (improvedContent != null) {
                         entryValues.put(EntryColumns.ABSTRACT, improvedContent);
+
+                        if(videoURL != null) {
+                            entryValues.put(EntryColumns.VIDEO_URL, videoURL);
+                        }
                     }
                 }
 

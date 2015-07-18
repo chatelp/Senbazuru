@@ -70,7 +70,7 @@ public class EntryFragment extends Fragment implements BaseActivity.OnFullScreen
     private static final String STATE_ENTRIES_IDS = "STATE_ENTRIES_IDS";
     private static final String STATE_INITIAL_ENTRY_ID = "STATE_INITIAL_ENTRY_ID";
 
-    private int mTitlePos = -1, mDatePos, mMobilizedHtmlPos, mAbstractPos, mLinkPos, mIsFavoritePos, mIsReadPos, mEnclosurePos, mAuthorPos, mFeedNamePos, mFeedUrlPos, mFeedIconPos;
+    private int mTitlePos = -1, mDatePos, mMobilizedHtmlPos, mAbstractPos, mLinkPos, mIsFavoritePos, mIsReadPos, mEnclosurePos, mAuthorPos, mFeedNamePos, mFeedUrlPos, mFeedIconPos, mVideoURLPos;
 
     private int mCurrentPagerPos = -1;
     private Uri mBaseUri;
@@ -453,6 +453,7 @@ public class EntryFragment extends Fragment implements BaseActivity.OnFullScreen
                 mDatePos = cursor.getColumnIndex(EntryColumns.DATE);
                 mAbstractPos = cursor.getColumnIndex(EntryColumns.ABSTRACT);
                 mMobilizedHtmlPos = cursor.getColumnIndex(EntryColumns.MOBILIZED_HTML);
+                mVideoURLPos = cursor.getColumnIndex(EntryColumns.VIDEO_URL);
                 mLinkPos = cursor.getColumnIndex(EntryColumns.LINK);
                 mIsFavoritePos = cursor.getColumnIndex(EntryColumns.IS_FAVORITE);
                 mIsReadPos = cursor.getColumnIndex(EntryColumns.IS_READ);
@@ -545,9 +546,9 @@ public class EntryFragment extends Fragment implements BaseActivity.OnFullScreen
                     long timestamp = newCursor.getLong(mDatePos);
                     String link = newCursor.getString(mLinkPos);
                     String title = newCursor.getString(mTitlePos);
-                    String enclosure = newCursor.getString(mEnclosurePos);
+                    String videoURL = newCursor.getString(mVideoURLPos);
 
-                    view.setHtml(mEntriesIds[pagerPos], title, link, contentText, enclosure, author, timestamp, mPreferFullText);
+                    view.setHtml(mEntriesIds[pagerPos], title, link, contentText, videoURL, author, timestamp);
                     view.setTag(newCursor);
 
                     if (pagerPos == mCurrentPagerPos) {
