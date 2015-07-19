@@ -25,6 +25,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import pm.chatel.senbazuru.Constants;
 import pm.chatel.senbazuru.gcm.GcmRegistrationAsyncTask;
 
@@ -74,9 +77,11 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
 
 
-        //GCM Setup and registration
-        new GcmRegistrationAsyncTask(this).execute();
-
+        //GCM Setup and registration - only if google play services is available
+        int statusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (statusCode == ConnectionResult.SUCCESS) {
+            new GcmRegistrationAsyncTask(this).execute();
+        }
     }
 
     @Override

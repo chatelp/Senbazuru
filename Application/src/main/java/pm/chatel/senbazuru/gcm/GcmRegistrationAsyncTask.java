@@ -34,6 +34,7 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
+
         if (!PrefUtils.getString(PrefUtils.GCM_REG_ID, "").equals("")) {
             return "Device ALREADY registered with GCM, registration ID=" + PrefUtils.getString(PrefUtils.GCM_REG_ID, "");
         }
