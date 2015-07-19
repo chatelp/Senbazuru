@@ -40,6 +40,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.File;
+
 import pm.chatel.senbazuru.Constants;
 import pm.chatel.senbazuru.R;
 import pm.chatel.senbazuru.adapter.DrawerAdapter;
@@ -127,6 +129,13 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
         }
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
+
+
+        File file = this.getDatabasePath("FeedEx.db");
+        if (file.exists()) {
+            PrefUtils.putBoolean(PrefUtils.FIRST_OPEN, true);
+            file.delete();
+        }
 
         //Premier lancement: on ajoute le flux RSS à la main
         if (PrefUtils.getBoolean(PrefUtils.FIRST_OPEN, true)) {
