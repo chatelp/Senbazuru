@@ -111,7 +111,9 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
             if (PrefUtils.SHOW_SEARCH.equals(key)) {
                 UiUtils.updateFindFABButton(mFindFABButton);
             } else if (PrefUtils.IS_REFRESHING.equals(key)) {
-                handleProgress();
+                handleProgress(false);
+            } else if (PrefUtils.IS_REFRESHING_SWIPE.equals(key)) {
+                handleProgress(true);
             }
         }
     };
@@ -276,14 +278,12 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
     @Override public void onRefresh() {
         if (!PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
             if (mUri != null && FeedDataContentProvider.URI_MATCHER.match(mUri) == FeedDataContentProvider.URI_ENTRIES_FOR_FEED) {
-                getActivity().startService(new Intent(getActivity(), FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS).putExtra(Constants.FEED_ID,
+                getActivity().startService(new Intent(getActivity(), FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS_SWIPE).putExtra(Constants.FEED_ID,
                         mUri.getPathSegments().get(1)));
             } else {
-                getActivity().startService(new Intent(getActivity(), FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS));
+                getActivity().startService(new Intent(getActivity(), FetcherService.class).setAction(FetcherService.ACTION_REFRESH_FEEDS_SWIPE));
             }
         }
-
-        handleProgress();
     }
 
 
@@ -419,24 +419,20 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
         }
     }
 
-    private void handleProgress() {
-        if (PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false)) {
+
+    private void handleProgress(boolean fromSwipe) {
+        if (PrefUtils.getBoolean(PrefUtils.IS_REFRESHING, false) && !fromSwipe) {
             mSwipeRefreshLayout.setRefreshing(true);
         } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayout.setRefreshing(false);
 
-                    mNewEntriesNumber = 0;
-                    mListDisplayDate = new Date().getTime();
+            mNewEntriesNumber = 0;
+            mListDisplayDate = new Date().getTime();
 
-                    refreshUI();
-                    if (mUri != null) {
-                        restartLoaders();
-                    }
-                }
-            }, 1000);
+            refreshUI();
+            if (mUri != null) {
+                restartLoaders();
+            }
         }
     }
     public void markAllEntriesAsRead() {

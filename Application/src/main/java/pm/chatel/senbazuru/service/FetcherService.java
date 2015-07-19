@@ -95,6 +95,7 @@ import java.util.regex.Pattern;
 public class FetcherService extends IntentService {
 
     public static final String ACTION_REFRESH_FEEDS = "pm.chatel.senbazuru.REFRESH";
+    public static final String ACTION_REFRESH_FEEDS_SWIPE = "pm.chatel.senbazuru.REFRESH_SWIPE";
 
     private static final int THREAD_NUMBER = 3;
     private static final int MAX_TASK_ATTEMPT = 3;
@@ -167,7 +168,7 @@ public class FetcherService extends IntentService {
         final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         // Connectivity issue, we quit
         if (networkInfo == null || networkInfo.getState() != NetworkInfo.State.CONNECTED) {
-            if (ACTION_REFRESH_FEEDS.equals(intent.getAction()) && !isFromAutoRefresh) {
+            if ((ACTION_REFRESH_FEEDS.equals(intent.getAction()) || ACTION_REFRESH_FEEDS_SWIPE.equals(intent.getAction())) && !isFromAutoRefresh) {
                 // Display a toast in that case
                 mHandler.post(new Runnable() {
                     @Override
@@ -187,7 +188,11 @@ public class FetcherService extends IntentService {
         }
 
         // == Constants.ACTION_REFRESH_FEEDS
-        PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, true);
+        if(ACTION_REFRESH_FEEDS.equals(intent.getAction()))
+            PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, true);
+        else if(ACTION_REFRESH_FEEDS_SWIPE.equals(intent.getAction()))
+            PrefUtils.putBoolean(PrefUtils.IS_REFRESHING_SWIPE, true);
+
 
         if (isFromAutoRefresh) {
             PrefUtils.putLong(PrefUtils.LAST_SCHEDULED_REFRESH, SystemClock.elapsedRealtime());
@@ -249,7 +254,10 @@ public class FetcherService extends IntentService {
             }
         }
 
-        PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, false);
+        if(ACTION_REFRESH_FEEDS.equals(intent.getAction()))
+            PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, false);
+        else if(ACTION_REFRESH_FEEDS_SWIPE.equals(intent.getAction()))
+            PrefUtils.putBoolean(PrefUtils.IS_REFRESHING_SWIPE, false);
     }
 
 

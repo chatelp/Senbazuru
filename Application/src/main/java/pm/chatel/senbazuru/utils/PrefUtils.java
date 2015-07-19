@@ -31,6 +31,8 @@ public class PrefUtils {
     public static final String DISPLAY_TIP = "DISPLAY_TIP";
 
     public static final String IS_REFRESHING = "IS_REFRESHING";
+    public static final String IS_REFRESHING_SWIPE = "IS_REFRESHING_SWIPE";
+
 
     public static final String REFRESH_INTERVAL = "refresh.interval";
     public static final String REFRESH_ENABLED = "refresh.enabled";
