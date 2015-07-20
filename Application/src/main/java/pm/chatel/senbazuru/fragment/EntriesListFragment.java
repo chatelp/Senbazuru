@@ -287,11 +287,11 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
     }
 
 
-    @Override
+    /*@Override
     public void onStop() {
         PrefUtils.unregisterOnPrefChangeListener(mPrefListener);
         super.onStop();
-    }
+    }*/
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
