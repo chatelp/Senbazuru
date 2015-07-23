@@ -49,6 +49,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.Html;
 import android.text.TextUtils;
@@ -61,10 +62,14 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.squareup.picasso.Picasso;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import pm.chatel.senbazuru.Constants;
 import pm.chatel.senbazuru.MainApplication;
 import pm.chatel.senbazuru.R;
 import pm.chatel.senbazuru.provider.FeedData;
+import pm.chatel.senbazuru.provider.FeedData.CategoryColumns;
 import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
 import pm.chatel.senbazuru.provider.FeedData.FeedColumns;
 import pm.chatel.senbazuru.utils.CircleTransform;
@@ -76,7 +81,7 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
     private final Uri mUri;
     private final boolean mShowFeedInfo;
     private final CircleTransform mCircleTransform = new CircleTransform();
-    private int mIdPos, mTitlePos, mMainImgPos, mDatePos, mIsReadPos, mFavoritePos, mFeedIdPos, mFeedIconPos, mFeedNamePos;
+    private int mIdPos, mTitlePos, mMainImgPos, mDatePos, mIsReadPos, mFavoritePos, mFeedIdPos, mCategoryPos;
 
     public EntriesCursorAdapter(Context context, Uri uri, Cursor cursor, boolean showFeedInfo) {
         super(context, R.layout.item_entry_list, cursor, 0);
@@ -94,6 +99,7 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
             holder.dateTextView = (TextView) view.findViewById(android.R.id.text2);
             holder.mainImgView = (ImageView) view.findViewById(R.id.main_icon);
             holder.starImgView = (ImageView) view.findViewById(R.id.favorite_icon);
+            holder.difficultyImgView = (ImageView) view.findViewById(R.id.difficulty_icon);
             view.setTag(R.id.holder, holder);
         }
 
@@ -134,6 +140,40 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
             holder.dateTextView.setEnabled(false);
             holder.isRead = true;
         }
+
+        holder.difficultyImgView.setImageResource(this.getDifficultyImage(context, cursor.getString(mIdPos)));
+    }
+
+    private int getDifficultyImage(Context context, String entryID) {
+        ContentResolver cr = context.getContentResolver();
+        Cursor cursor = null;
+        try {
+            cursor = cr.query(CategoryColumns.CATEGORIES_FOR_ENTRY_CONTENT_URI(entryID), new String[]{CategoryColumns.CATEGORY}, "category LIKE 'Difficulté%'", null, null);
+            while (cursor.moveToNext()) {
+                String category = cursor.getString(0);
+                Pattern pattern = Pattern.compile("★{1,3}$");
+                Matcher matcher = pattern.matcher(category);
+                while(matcher.find()) {
+                    switch (matcher.group().length()) {
+                        case 1:
+                            return R.drawable.cool_lightgrey_64pt;
+                        case 2:
+                            return R.drawable.happy_lightgrey_64pt;
+                        case 3:
+                            return R.drawable.evil_lightgrey_64pt;
+                    }
+                    break;
+                }
+                break;
+            }
+        } finally {
+            try {
+                if (cursor != null && !cursor.isClosed())
+                    cursor.close();
+            } catch(Exception ex) {}
+        }
+
+        return android.R.color.transparent;
     }
 
     public void toggleReadState(final long id, View view) {
@@ -230,9 +270,7 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
             mDatePos = cursor.getColumnIndex(EntryColumns.DATE);
             mIsReadPos = cursor.getColumnIndex(EntryColumns.IS_READ);
             mFavoritePos = cursor.getColumnIndex(EntryColumns.IS_FAVORITE);
-            mFeedNamePos = cursor.getColumnIndex(FeedColumns.NAME);
             mFeedIdPos = cursor.getColumnIndex(EntryColumns.FEED_ID);
-            mFeedIconPos = cursor.getColumnIndex(FeedColumns.ICON);
         }
     }
 
@@ -241,6 +279,7 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
         public TextView dateTextView;
         public ImageView mainImgView;
         public ImageView starImgView;
+        public ImageView difficultyImgView;
         public boolean isRead, isFavorite;
     }
 }

@@ -188,55 +188,6 @@ public class DrawerAdapter extends BaseAdapter {
             holder.iconView.setImageResource(R.drawable.action_search);
         }
 
-        /*if (mFeedsCursor != null && mFeedsCursor.moveToPosition(position - 2)) {
-            holder.titleTxt.setText((mFeedsCursor.isNull(POS_NAME) ? mFeedsCursor.getString(POS_URL) : mFeedsCursor.getString(POS_NAME)));
-
-            if (mFeedsCursor.getInt(POS_IS_GROUP) == 1) {
-                holder.titleTxt.setTextColor(GROUP_TEXT_COLOR);
-                holder.titleTxt.setAllCaps(true);
-                holder.separator.setVisibility(View.VISIBLE);
-            } else {
-                holder.stateTxt.setVisibility(View.VISIBLE);
-
-                if (mFeedsCursor.isNull(POS_ERROR)) {
-                    long timestamp = mFeedsCursor.getLong(POS_LAST_UPDATE);
-
-                    // Date formatting is expensive, look at the cache
-                    String formattedDate = mFormattedDateCache.get(timestamp);
-                    if (formattedDate == null) {
-
-                        formattedDate = mContext.getString(R.string.update) + COLON;
-
-                        if (timestamp == 0) {
-                            formattedDate += mContext.getString(R.string.never);
-                        } else {
-                            formattedDate += StringUtils.getDateTimeString(timestamp);
-                        }
-
-                        mFormattedDateCache.put(timestamp, formattedDate);
-                    }
-
-                    holder.stateTxt.setText(formattedDate);
-                } else {
-                    holder.stateTxt.setText(new StringBuilder(mContext.getString(R.string.error)).append(COLON).append(mFeedsCursor.getString(POS_ERROR)));
-                }
-
-                final long feedId = mFeedsCursor.getLong(POS_ID);
-                Bitmap bitmap = UiUtils.getFaviconBitmap(feedId, mFeedsCursor, POS_ICON);
-
-                if (bitmap != null) {
-                    holder.iconView.setImageBitmap(bitmap);
-                } else {
-                    holder.iconView.setImageResource(R.drawable.android_icon);
-                }
-
-                int unread = mFeedsCursor.getInt(POS_UNREAD);
-                if (unread != 0) {
-                    holder.countTxt.setText(String.valueOf(unread));
-                }
-            }
-        }*/
-
         return convertView;
     }
 

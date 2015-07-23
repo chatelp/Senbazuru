@@ -311,7 +311,8 @@ public class FeedDataContentProvider extends ContentProvider {
 
             case URI_CATEGORY_FOR_ENTRY:
             case URI_CATEGORIES_FOR_ENTRY: {
-                System.out.print("test");
+                queryBuilder.setTables(CategoryColumns.TABLE_NAME);
+                queryBuilder.appendWhere(new StringBuilder(CategoryColumns.ENTRY_ID).append('=').append(uri.getPathSegments().get(1)));
                 break;
             }
 
