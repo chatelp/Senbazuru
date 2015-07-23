@@ -460,9 +460,10 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
                 if (view != null) {
                     // Just click on views, the adapter will do the real stuff
                     if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE) {
-                        mEntriesCursorAdapter.toggleReadState(id, view);
-                    } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE) {
                         mEntriesCursorAdapter.toggleFavoriteState(id, view);
+                    } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE) {
+                        mEntriesCursorAdapter.toggleReadState(id, view);
+
                     }
 
                     // Just simulate a CANCEL event to remove the item highlighting

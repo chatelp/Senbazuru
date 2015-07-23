@@ -49,6 +49,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.Html;
@@ -108,16 +109,10 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
         String titleText = cursor.getString(mTitlePos);
         holder.titleTextView.setText(titleText);
 
-        final long feedId = cursor.getLong(mFeedIdPos);
-        //String feedName = cursor.getString(mFeedNamePos);
-        String feedName = null;
-
         String mainImgUrl = cursor.getString(mMainImgPos);
         mainImgUrl = TextUtils.isEmpty(mainImgUrl) ? null : NetworkUtils.getDownloadedOrDistantImageUrl(cursor.getLong(mIdPos), mainImgUrl);
 
-        ColorGenerator generator = ColorGenerator.DEFAULT;
-        int color = generator.getColor(Long.valueOf(feedId)); // The color is specific to the feedId (which shouldn't change)
-        TextDrawable letterDrawable = TextDrawable.builder().buildRound((feedName != null ? feedName.substring(0, 1).toUpperCase() : ""), color);
+        TextDrawable letterDrawable = TextDrawable.builder().buildRound((titleText != null ? titleText.substring(0, 1).toUpperCase() : ""), context.getResources().getColor(R.color.primary_light));
         if (mainImgUrl != null) {
             Picasso.with(context).load(mainImgUrl).transform(mCircleTransform).placeholder(letterDrawable).error(letterDrawable).into(holder.mainImgView);
         } else {
