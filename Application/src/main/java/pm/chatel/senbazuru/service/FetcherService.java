@@ -47,6 +47,7 @@ package pm.chatel.senbazuru.service;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -66,6 +67,7 @@ import pm.chatel.senbazuru.MainApplication;
 import pm.chatel.senbazuru.R;
 import pm.chatel.senbazuru.activity.HomeActivity;
 import pm.chatel.senbazuru.parser.RssAtomParser;
+import pm.chatel.senbazuru.provider.FeedData;
 import pm.chatel.senbazuru.provider.FeedData.EntryColumns;
 import pm.chatel.senbazuru.provider.FeedData.FeedColumns;
 import pm.chatel.senbazuru.provider.FeedData.TaskColumns;
@@ -258,8 +260,52 @@ public class FetcherService extends IntentService {
             PrefUtils.putBoolean(PrefUtils.IS_REFRESHING, false);
         else if(ACTION_REFRESH_FEEDS_SWIPE.equals(intent.getAction()))
             PrefUtils.putBoolean(PrefUtils.IS_REFRESHING_SWIPE, false);
+
+        downloadAllImages();
     }
 
+
+    private void downloadAllImages() {
+        ContentResolver cr = MainApplication.getContext().getContentResolver();
+        Cursor cursor = cr.query(TaskColumns.CONTENT_URI, new String[]{TaskColumns._ID, TaskColumns.ENTRY_ID, TaskColumns.IMG_URL_TO_DL,
+                TaskColumns.NUMBER_ATTEMPT}, TaskColumns.IMG_URL_TO_DL + Constants.DB_IS_NOT_NULL, null, null);
+
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            long taskId = cursor.getLong(0);
+            long entryId = cursor.getLong(1);
+            String imgPath = cursor.getString(2);
+            int nbAttempt = 0;
+            if (!cursor.isNull(3)) {
+                nbAttempt = cursor.getInt(3);
+            }
+
+            try {
+                NetworkUtils.downloadImage(entryId, imgPath);
+
+                // If we are here, everything is OK
+                operations.add(ContentProviderOperation.newDelete(TaskColumns.CONTENT_URI(taskId)).build());
+            } catch (Exception e) {
+                if (nbAttempt + 1 > MAX_TASK_ATTEMPT) {
+                    operations.add(ContentProviderOperation.newDelete(TaskColumns.CONTENT_URI(taskId)).build());
+                } else {
+                    ContentValues values = new ContentValues();
+                    values.put(TaskColumns.NUMBER_ATTEMPT, nbAttempt + 1);
+                    operations.add(ContentProviderOperation.newUpdate(TaskColumns.CONTENT_URI(taskId)).withValues(values).build());
+                }
+            }
+        }
+
+        cursor.close();
+
+        if (!operations.isEmpty()) {
+            try {
+                cr.applyBatch(FeedData.AUTHORITY, operations);
+            } catch (Throwable ignored) {
+            }
+        }
+    }
 
     private void deleteOldEntries(long keepDateBorderTime) {
         if (keepDateBorderTime > 0) {
