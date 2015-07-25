@@ -386,7 +386,7 @@ public class EntriesListFragment extends ListFragment implements SwipeRefreshLay
         mEntriesCursorAdapter = new EntriesCursorAdapter(getActivity(), mUri, Constants.EMPTY_CURSOR, mShowFeedInfo);
         setListAdapter(mEntriesCursorAdapter);
 
-        mListDisplayDate = new Date().getTime();
+        //mListDisplayDate = new Date().getTime();
         if (mUri != null) {
             restartLoaders();
         }
