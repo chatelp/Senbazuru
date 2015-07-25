@@ -43,13 +43,12 @@ public class AboutActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String title;
+        String title = "Senbazuru";
         PackageManager manager = this.getPackageManager();
         try {
             PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
-            title = "version " + info.versionName + " - build " + info.versionCode;
+            title += " Version " + info.versionName + " - Build " + info.versionCode;
         } catch (NameNotFoundException unused) {
-            title = "Senbazuru pour Android";
         }
         TextView titleView = (TextView) findViewById(R.id.about_title);
         titleView.setText(title);

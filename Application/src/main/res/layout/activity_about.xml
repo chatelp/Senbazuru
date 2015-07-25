@@ -20,7 +20,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dip"
-        android:layout_marginTop="5dip"/>
+        android:layout_marginTop="5dip"
+        android:textStyle="bold"
+        android:textColor="@color/accent_dark" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,7 +30,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dip"
         android:layout_marginTop="5dip"
-        android:text="@string/about_us_copyright"/>
+        android:text="@string/about_us_copyright"
+        android:textStyle="bold"
+        android:textColor="@color/accent" />
 
     <TextView
         android:id="@+id/about_content"
