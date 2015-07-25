@@ -24,10 +24,4 @@
         android:key="widget.fontsize"
         android:title="@string/settings_font_size"/>
 
-    <PreferenceCategory
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:key="widget.visiblefeeds"
-        android:title="@string/settings_visible_feeds"/>
-
 </PreferenceScreen>
