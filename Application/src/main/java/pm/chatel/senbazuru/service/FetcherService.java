@@ -45,18 +45,22 @@
 package pm.chatel.senbazuru.service;
 
 import android.app.IntentService;
+import android.app.LoaderManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Xml;
@@ -209,48 +213,42 @@ public class FetcherService extends IntentService {
 
         if (newCount > 0) {
             if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_ENABLED, true)) {
-                Cursor cursor = getContentResolver().query(EntryColumns.CONTENT_URI, new String[]{Constants.DB_COUNT}, EntryColumns.WHERE_UNREAD, null, null);
 
-                cursor.moveToFirst();
-                newCount = cursor.getInt(0); // The number has possibly changed
-                cursor.close();
+                String text = getResources().getQuantityString(R.plurals.number_of_new_entries, newCount, newCount);
 
-                if (newCount > 0) {
-                    String text = getResources().getQuantityString(R.plurals.number_of_new_entries, newCount, newCount);
+                Intent notificationIntent = new Intent(FetcherService.this, HomeActivity.class);
+                PendingIntent contentIntent = PendingIntent.getActivity(FetcherService.this, 0, notificationIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
 
-                    Intent notificationIntent = new Intent(FetcherService.this, HomeActivity.class);
-                    PendingIntent contentIntent = PendingIntent.getActivity(FetcherService.this, 0, notificationIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
+                Notification.Builder notifBuilder = new Notification.Builder(MainApplication.getContext()) //
+                        .setContentIntent(contentIntent) //
+                        .setSmallIcon(R.drawable.senbazuru_ui_icon_44pt) //
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.android_icon)) //
+                        .setTicker(text) //
+                        .setWhen(System.currentTimeMillis()) //
+                        .setAutoCancel(true) //
+                        .setContentTitle(getString(R.string.notifications_title)) //
+                        .setContentText(text) //
+                        .setLights(0xffffffff, 0, 0);
 
-                    Notification.Builder notifBuilder = new Notification.Builder(MainApplication.getContext()) //
-                            .setContentIntent(contentIntent) //
-                            .setSmallIcon(R.drawable.senbazuru_ui_icon_44pt) //
-                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.android_icon)) //
-                            .setTicker(text) //
-                            .setWhen(System.currentTimeMillis()) //
-                            .setAutoCancel(true) //
-                            .setContentTitle(getString(R.string.notifications_title)) //
-                            .setContentText(text) //
-                            .setLights(0xffffffff, 0, 0);
-
-                    if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_VIBRATE, false)) {
-                        notifBuilder.setVibrate(new long[]{0, 1000});
-                    }
-
-                    if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_RINGTONE, false)) {
-                        Uri notifURI = Uri.parse("android.resource://"
-                                + getBaseContext().getPackageName() + "/" + R.raw.dada);
-                        notifBuilder.setSound(notifURI);
-                    }
-
-                    if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_LIGHT, false)) {
-                        notifBuilder.setLights(0xffffffff, 300, 1000);
-                    }
-
-                    if (Constants.NOTIF_MGR != null) {
-                        Constants.NOTIF_MGR.notify(0, notifBuilder.getNotification());
-                    }
+                if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_VIBRATE, false)) {
+                    notifBuilder.setVibrate(new long[]{0, 1000});
                 }
+
+                if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_RINGTONE, false)) {
+                    Uri notifURI = Uri.parse("android.resource://"
+                            + getBaseContext().getPackageName() + "/" + R.raw.dada);
+                    notifBuilder.setSound(notifURI);
+                }
+
+                if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_LIGHT, false)) {
+                    notifBuilder.setLights(0xffffffff, 300, 1000);
+                }
+
+                if (Constants.NOTIF_MGR != null) {
+                    Constants.NOTIF_MGR.notify(0, notifBuilder.getNotification());
+                }
+
             } else if (Constants.NOTIF_MGR != null) {
                 Constants.NOTIF_MGR.cancel(0);
             }
