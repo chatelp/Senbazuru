@@ -1,7 +1,8 @@
 /**
- * Flym
+ * Senbazuru for Android
  * <p/>
- * Copyright (c) 2012-2015 Frederic Julian
+ * Copyright (c) 2015 Pierre CHATEL
+ * Copyright (c) 2012-2015 Frederic Julian - for parts derived from Flym
  * <p/>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +22,7 @@
  * below). Please refers to the original project to identify which parts are under the
  * MIT license.
  * <p/>
- * Copyright (c) 2010-2012 Stefan Handschuh
+ * Copyright (c) 2010-2012 Stefan Handschuh - for parts derived from Sparse rss
  * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
