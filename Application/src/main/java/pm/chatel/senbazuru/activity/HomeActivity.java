@@ -41,6 +41,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.codechimp.apprater.AppRater;
+
 import java.io.File;
 
 import pm.chatel.senbazuru.Constants;
@@ -156,6 +158,10 @@ public class HomeActivity extends BaseActivity implements LoaderManager.LoaderCa
             }
             PrefUtils.putBoolean(PrefUtils.FIRST_OPEN, false);
         }
+
+        AppRater.app_launched(this, 2, 5); //2 days OR 5 launches
+        AppRater.setVersionCodeCheckEnabled(true);
+        AppRater.setVersionNameCheckEnabled(true);
     }
 
     @Override

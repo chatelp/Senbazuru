@@ -34,7 +34,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode getVersionCode()
-        versionName "1.0.0-beta"
+        versionName "1.0.0"
     }
 
     compileOptions {
@@ -78,11 +78,12 @@ dependencies {
     compile 'org.jsoup:jsoup:+'
     compile 'com.squareup.picasso:picasso:+'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:+'
+    compile 'com.github.codechimp-org.apprater:library:1.0.+'
     compile 'com.google.android.gms:play-services-ads:7.5.0'
     compile 'com.google.android.gms:play-services-analytics:7.5.0'
     compile 'com.google.android.gms:play-services-gcm:7.5.0'
     compile project(path: ':cloudBackend', configuration: 'android-endpoints')
-    compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.0@aar') {
         transitive = true;
     }
 }

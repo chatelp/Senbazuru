@@ -74,7 +74,7 @@ public class GcmIntentService extends IntentService {
                         notifBuilder.setVibrate(new long[]{0, 1000});
                     }
 
-                    if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_RINGTONE, false)) {
+                    if (PrefUtils.getBoolean(PrefUtils.NOTIFICATIONS_RINGTONE, true)) {
                         Uri notifURI = Uri.parse("android.resource://"
                                 + getBaseContext().getPackageName() + "/" + R.raw.dada);
                         notifBuilder.setSound(notifURI);
