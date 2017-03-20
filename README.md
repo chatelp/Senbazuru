@@ -7,7 +7,7 @@ An Android app to play video tutorials about Origami and track new releases from
 
 Une application Android pour lire les vidéos de tutoriels d'Origami, et suivre les nouveautées, du site [Senbazuru Origami](http://senbazuru.fr) et sa [chaîne Youtube](https://www.youtube.com/channel/UCVIGU6j8Tb8FySfYNDC6gJQ).
 
-<a href='https://play.google.com/store/apps/details?id=pm.chatel.senbazuru&hl=fr&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Disponible sur Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/fr_badge_web_generic.png' style="width: 200px;"/></a>
+<a href='https://play.google.com/store/apps/details?id=pm.chatel.senbazuru&hl=fr&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Disponible sur Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/fr_badge_web_generic.png' width="200"/></a>
 
 ## Principes - Material Design
 Développée pour Android en Java sous Android Studio, en suivant les principes du [Material Design](https://www.google.com/design/spec/material-design/introduction.html), cette application est disponible sur le [Google Play Store](https://play.google.com/store/apps/details?id=pm.chatel.senbazuru&hl=fr). Le logo du site [senbazuru.fr](http://senbazuru.fr/) a été adapté sous la forme d’une icône respectant les canons de la plateforme Android, en particulier l’ajout d’une longue ombre projetée sur certains éléments clés du logo et le respect du format conseillé. 
